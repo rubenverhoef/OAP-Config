@@ -12,6 +12,11 @@ function set_wallpaper() {
     sudo sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
+# Remove unwanted OAP apps
+function remove_apps() {
+    install -m 644 /boot/OAP-Config/openauto_applications.ini                      "/home/pi"
+}
+
 # Install services
 function install_services() {
     install -m 644 /boot/OAP-Config/services/user_startup.service                "/etc/systemd/system/"
