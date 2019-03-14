@@ -1,0 +1,10 @@
+[Unit]
+ Description=OAP gpio shutdown service
+
+[Service]
+ Type=simple
+ ExecStart=/opt/OAP/service_gpio_shutdown.sh
+ RemainAfterExit=yes
+
+[Install]
+ WantedBy=multi-user.target
