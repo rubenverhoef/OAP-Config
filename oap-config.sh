@@ -284,6 +284,7 @@ remove_ssh_message
 relay_config
 power_config
 set_wallpaper
+remove_apps
 # rtc "ds3231" "$3"
 # audio_audioinjector "wm8731-audio"
 # audio_audioinjector_controls
