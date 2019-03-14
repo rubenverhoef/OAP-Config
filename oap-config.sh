@@ -1,13 +1,15 @@
 #!/bin/bash
 
 # Activate SSH root
-function root_ssh() {
-    sudo sed -i 's/^#PermitRootLogin*/PermitRootLogin/' /etc/ssh/sshd_config
+function remove_ssh_message() {
+    sudo rm -f /etc/profile.d/sshpwd.sh
+    sudo rm -f /etc/xdg/lxsession/LXDE-pi/sshpwd.sh
 }
 
 # Set Wallpaper
 function set_wallpaper() {
-    sudo sed -i 's/^wallpaper=*/wallpaper=\/home\/pi\/wallpaper.png/' /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
+    install -m 644 /boot/OAP-Config/wallpaper.png                      "/home/pi"
+    sudo sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
 # Install services
@@ -273,10 +275,10 @@ function audio_audioinjector_controls() {
 }
 
 
-#root_ssh
+remove_ssh_message
 relay_config
 power_config
-# set_wallpaper
+set_wallpaper
 # rtc "ds3231" "$3"
 # audio_audioinjector "wm8731-audio"
 # audio_audioinjector_controls
