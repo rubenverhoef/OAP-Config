@@ -17,6 +17,16 @@ function remove_apps() {
     install -m 644 /boot/OAP-Config/openauto_applications.ini                      "/home/pi"
 }
 
+# Install cam_overlay Rearcam
+function install_rearcam() {
+    install -d "/opt/OAP/cam_overlay"
+    install -m 755 /boot/OAP-Config/cam_overlay/cam_overlay.bin                 "/opt/OAP/cam_overlay"
+    install -m 755 /boot/OAP-Config/cam_overlay/overlay.png                     "/opt/OAP/cam_overlay"
+    install -m 755 /boot/OAP-Config/cam_overlay/shader.frag                     "/opt/OAP/cam_overlay"
+    install -m 755 /boot/OAP-Config/cam_overlay/shader.vert                     "/opt/OAP/cam_overlay"
+    install -m 755 /boot/OAP-Config/cam_overlay/shader-YUYV.frag                "/opt/OAP/cam_overlay"
+}
+
 # Install services
 function install_services() {
     install -m 644 /boot/OAP-Config/services/user_startup.service                "/etc/systemd/system/"
@@ -114,6 +124,7 @@ relay_config
 power_config
 set_wallpaper
 remove_apps
+install_rearcam
 # audio_audioinjector
 # rtc "ds3231" "$3"
 install_services
