@@ -9,6 +9,7 @@ function remove_ssh_message() {
 # Set Wallpaper
 function set_wallpaper() {
     install -m 644 /boot/OAP-Config/wallpaper.png                      "/home/pi"
+    install -m 644 /boot/OAP-Config/wallpaper.png                      "/usr/share/plymouth/themes/pix/splash.png"
     sudo sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
