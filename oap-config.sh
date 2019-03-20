@@ -37,14 +37,12 @@ function install_rearcam() {
 function install_services() {
     install -m 644 /boot/OAP-Config/services/user_startup.service                "/etc/systemd/system/"
     install -m 644 /boot/OAP-Config/services/gpio_shutdown.service               "/etc/systemd/system/"
-    # install -m 644 /boot/OAP-Config/services/hwclock-load.service                "/etc/systemd/system/"
     # install -m 644 /boot/OAP-Config/services/custombrightness.service            "/etc/systemd/system/"
 
     install -d "/opt/OAP"
     install -m 755 /boot/OAP-Config/scripts/service_user_startup.sh             "/opt/OAP/"
     install -m 755 /boot/OAP-Config/scripts/service_gpio_shutdown.sh            "/opt/OAP/"
     install -m 755 /boot/OAP-Config/scripts/obd-keys.py                         "/opt/OAP/"
-    # install -m 755 /boot/OAP-Config/scripts/service_hwclock.sh                  "/opt/OAP/"
     # install -m 755 /boot/OAP-Config/scripts/service_custombrightness.sh         "/opt/OAP/"
 }
 
@@ -52,7 +50,6 @@ function install_services() {
 function activate_services() {
     systemctl enable user_startup.service
     systemctl enable gpio_shutdown.service
-    # systemctl enable hwclock-load.service
     # systemctl enable custombrightness.service
 }
 
