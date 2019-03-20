@@ -14,8 +14,13 @@ function set_wallpaper() {
 }
 
 # Remove unwanted OAP apps
-function remove_apps() {
-    install -m 644 /boot/OAP-Config/openauto_applications.ini                      "/home/pi"
+function config_oap() {
+    install -m 644 /boot/OAP-Config/config/openauto_androidauto.ini             "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_applications.ini            "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_controller_service.ini      "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_license.dat                 "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_system.ini                  "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_tos.dat                     "/home/pi"
 }
 
 # Install cam_overlay Rearcam
@@ -125,7 +130,7 @@ remove_ssh_message
 relay_config
 power_config
 set_wallpaper
-remove_apps
+config_oap
 install_rearcam
 # audio_audioinjector
 # rtc "ds3231" "$3"
