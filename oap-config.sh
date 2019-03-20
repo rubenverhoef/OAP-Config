@@ -39,7 +39,6 @@ function install_services() {
     install -m 644 /boot/OAP-Config/services/gpio_shutdown.service               "/etc/systemd/system/"
     # install -m 644 /boot/OAP-Config/services/hwclock-load.service                "/etc/systemd/system/"
     # install -m 644 /boot/OAP-Config/services/custombrightness.service            "/etc/systemd/system/"
-    # install -m 644 /boot/OAP-Config/services/alsastaterestore.service            "/etc/systemd/system/"
 
     install -d "/opt/OAP"
     install -m 755 /boot/OAP-Config/scripts/service_user_startup.sh             "/opt/OAP/"
@@ -47,16 +46,14 @@ function install_services() {
     install -m 755 /boot/OAP-Config/scripts/obd-keys.py                         "/opt/OAP/"
     # install -m 755 /boot/OAP-Config/scripts/service_hwclock.sh                  "/opt/OAP/"
     # install -m 755 /boot/OAP-Config/scripts/service_custombrightness.sh         "/opt/OAP/"
-    # install -m 755 /boot/OAP-Config/scripts/service_alsastaterestore.sh         "/opt/OAP/"
 }
 
 # Activate services
 function activate_services() {
     systemctl enable user_startup.service
     systemctl enable gpio_shutdown.service
-    #systemctl enable hwclock-load.service
-    #systemctl enable custombrightness.service
-    # systemctl enable alsastaterestore.service
+    # systemctl enable hwclock-load.service
+    # systemctl enable custombrightness.service
 }
 
 # Shutdown functions
@@ -82,48 +79,28 @@ function power_config() {
 }
 
 # RTC functions
-function rtc() {
+function activate_rtc() {
+    activate_i2c
     sudo sed -i '/./,/^$/!d' /boot/config.txt
     sudo sed -i 's/^# RTC Setup.*//' /boot/config.txt
     sudo sed -i '/dtoverlay=i2c-rtc/d' /boot/config.txt
     sudo sed -i '/./,/^$/!d' /boot/config.txt
-    sudo sed -i '/./,/^$/!d' /etc/modules
     sudo sh -c "echo '' >> /boot/config.txt"
     sudo sh -c "echo '# RTC Setup' >> /boot/config.txt"
-    sudo sh -c "echo 'dtoverlay=i2c-rtc,'$1 >> /boot/config.txt"
-    sudo systemctl enable hwclock-load.service >/dev/null 2>&1
-    sudo systemctl daemon-reload
-	sudo timedatectl set-timezone "$(cat /etc/timezone)"
-    check_i2c
+    sudo sh -c "echo 'dtoverlay=i2c-rtc,ds3231' >> /boot/config.txt"
+    # sudo systemctl enable hwclock-load.service >/dev/null 2>&1
+    # sudo systemctl daemon-reload
+	# sudo timedatectl set-timezone "$(cat /etc/timezone)"
 }
 
-# Audio functions
-function audio_audioinjector() {
-    sudo sed -i '/./,/^$/!d' /boot/config.txt
-    sudo sed -i 's/^dtparam=audio=.*//' /boot/config.txt
-    sudo sed -i 's/^dtoverlay=audioinjector.*//' /boot/config.txt
-    sudo sed -i 's/^dtparam=i2s=on.*//' /boot/config.txt
-    sudo sed -i 's/^# Audio Setup.*//' /boot/config.txt
-    sudo sed -i '/./,/^$/!d' /boot/config.txt
-    sudo sh -c "echo '' >> /boot/config.txt"
-    sudo sh -c "echo '# Audio Setup' >> /boot/config.txt"
-    sudo sh -c "echo 'dtoverlay=audioinjector-wm8731-audio' >> /boot/config.txt"
-#    sudo sh -c "echo 'dtparam=i2s=on' >> /boot/config.txt"
-    alsactl --file /boot/OAP-Config/AudioInjector-RCA.state restore
-    check_i2c
-}
-
-function check_i2c() {
+function activate_i2c() {
     sudo sed -i '/./,/^$/!d' /boot/config.txt
     sudo sed -i '/dtoverlay=i2c_arm=/d' /boot/config.txt
     sudo sed -i 's/^# I2C Bus.*//' /boot/config.txt
-    sudo sed -i '/i2c*/d' /etc/modules
     sudo sed -i '/./,/^$/!d' /boot/config.txt
-    sudo sed -i '/./,/^$/!d' /etc/modules
     sudo sh -c "echo '' >> /boot/config.txt"
     sudo sh -c "echo '# I2C Bus' >> /boot/config.txt"
     sudo sh -c "echo 'dtoverlay=i2c_arm=on' >> /boot/config.txt"
-    sudo sh -c "echo 'i2c-dev' >> /etc/modules"
 }
 
 remove_ssh_message
@@ -132,7 +109,6 @@ power_config
 set_wallpaper
 config_oap
 install_rearcam
-# audio_audioinjector
-# rtc "ds3231" "$3"
+# activate_rtc
 install_services
 activate_services
