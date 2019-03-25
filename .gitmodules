@@ -1,0 +1,9 @@
+[submodule "OBD/keyboard"]
+	path = OBD/keyboard
+	url = https://github.com/boppreh/keyboard.git
+[submodule "OBD/pint"]
+	path = OBD/pint
+	url = https://github.com/hgrecco/pint.git
+[submodule "OBD/obd"]
+	path = OBD/obd
+	url = https://github.com/rubenverhoef/python-OBD.git
