@@ -34,10 +34,10 @@ class OBDStruct:
         subprocess.Popen(["killall", "cam_overlay.bin"])
     
     def ModeNight(self):
-        subprocess.Popen(["csmt", "state", "night"])
+        keyboard.press_and_release("F2")
 
     def ModeDay(self):
-        subprocess.Popen(["csmt", "state", "day"])
+        keyboard.press_and_release("F2")
 
 revCMD      = b"223B54"
 revHeader   = b'000726'
