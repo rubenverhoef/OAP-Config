@@ -1,9 +1,12 @@
-[submodule "OBD/keyboard"]
-	path = OBD/keyboard
-	url = https://github.com/boppreh/keyboard.git
 [submodule "OBD/pint"]
 	path = OBD/pint
 	url = https://github.com/hgrecco/pint.git
 [submodule "OBD/obd"]
 	path = OBD/obd
 	url = https://github.com/rubenverhoef/python-OBD.git
+[submodule "OBD/python-xlib"]
+	path = OBD/python-xlib
+	url = https://github.com/python-xlib/python-xlib.git
+[submodule "OBD/PyUserInput"]
+	path = OBD/PyUserInput
+	url = https://github.com/SavinaRoja/PyUserInput.git
