@@ -134,10 +134,10 @@ dpadCMD	   = b"22412C"
 dpadHeader = b'0007A5'
 dpadBytes  = 1
 dpadBase   = 0x62412C00
-# dpadLeft    = OBDStruct((0x62412C04 ^ keyBase), False, "1")
-dpadRight   = OBDStruct((0x62412C02 ^ keyBase), False, "left arrow")    # Hamburger Menu
-dpadUp      = OBDStruct((0x62412C10 ^ keyBase), False, "1")             # Wheel Left
-dpadDown    = OBDStruct((0x62412C08 ^ keyBase), False, "2")             # Wheel Right   
+# dpadLeft    = OBDStruct((0x62412C04 ^ dpadBase), False, "1")
+dpadRight   = OBDStruct((0x62412C02 ^ dpadBase), False, "left arrow")    # Hamburger Menu
+dpadUp      = OBDStruct((0x62412C10 ^ dpadBase), False, "1")             # Wheel Left
+dpadDown    = OBDStruct((0x62412C08 ^ dpadBase), False, "2")             # Wheel Right   
  
 dpadButtons   = [dpadUp, dpadDown]
 
