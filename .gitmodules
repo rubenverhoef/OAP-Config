@@ -9,4 +9,4 @@
 	url = https://github.com/python-xlib/python-xlib.git
 [submodule "OBD/PyUserInput"]
 	path = OBD/PyUserInput
-	url = https://github.com/SavinaRoja/PyUserInput.git
+	url = https://github.com/PyUserInput/PyUserInput.git
