@@ -2,17 +2,20 @@
 
 import os, sys, math, time, subprocess
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "keyboard"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "PyUserInput"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "python-xlib")) # needed for PyUserInput
 sys.path.append(os.path.join(os.path.dirname(__file__), "obd"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "pint"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "pint")) # needed for OBD
 
-import keyboard # import for emulating keyboard presses
+from pykeyboard import PyKeyboard # import for emulating keyboard presses
 
 import obd #import for reading/sending obd messages
 from obd import OBDCommand
 from obd.protocols import ECU
 from obd.utils import bytes_to_int
 import obd.decoders as d
+
+keyboard = PyKeyboard()
 
 class OBDStruct:
     def __init__(self, bitSelect, isPressing, button):
@@ -21,10 +24,10 @@ class OBDStruct:
         self.button     = button
 
     def pressButton(self):
-        keyboard.press(self.button)
+        keyboard.press_key(self.button)
 
     def releaseButton(self):
-        keyboard.release(self.button)
+        keyboard.release_key(self.button)
 
     def revCamOn(self):
         os.chdir("/opt/OAP/cam_overlay/")
@@ -34,10 +37,12 @@ class OBDStruct:
         subprocess.Popen(["killall", "cam_overlay.bin"])
     
     def ModeNight(self):
-        keyboard.press_and_release("F2")
+        keyboard.tap_key(keyboard.function_keys[2])
+        subprocess.Popen(["gpio", "-g", "pwm", "12", "800"])
 
     def ModeDay(self):
-        keyboard.press_and_release("F2")
+        keyboard.tap_key(keyboard.function_keys[2])
+        subprocess.Popen(["gpio", "-g", "pwm", "12", "0"])
 
 revCMD      = b"223B54"
 revHeader   = b'000726'
@@ -97,7 +102,7 @@ swBytes   = 1
 swBase    = 0x62833C00
 # swVolUp   = OBDStruct((0x62833C80 ^ swBase), False, None)
 # swVolDown = OBDStruct((0x62833C40 ^ swBase), False, None)
-swVoice   = OBDStruct((0x62833C08 ^ swBase), False, 50)       # Voice Command
+swVoice   = OBDStruct((0x62833C08 ^ swBase), False, "m")       # Voice Command
 swNext    = OBDStruct((0x62833C04 ^ swBase), False, "n")      # Next
 swPrev    = OBDStruct((0x62833C02 ^ swBase), False, "v")      # Previous
 swM       = OBDStruct((0x62833C01 ^ swBase), False, "return") # Enter
@@ -129,10 +134,10 @@ dpadCMD	   = b"22412C"
 dpadHeader = b'0007A5'
 dpadBytes  = 1
 dpadBase   = 0x62412C00
-# dpadLeft    = OBDStruct((0x62412C04 ^ dpadBase), False, "1")
-dpadRight   = OBDStruct((0x62412C02 ^ dpadBase), False, "left arrow")    # Hamburger Menu
-dpadUp      = OBDStruct((0x62412C10 ^ dpadBase), False, "1")             # Wheel Left
-dpadDown    = OBDStruct((0x62412C08 ^ dpadBase), False, "2")             # Wheel Right   
+# dpadLeft    = OBDStruct((0x62412C04 ^ keyBase), False, "1")
+dpadRight   = OBDStruct((0x62412C02 ^ keyBase), False, "left arrow")    # Hamburger Menu
+dpadUp      = OBDStruct((0x62412C10 ^ keyBase), False, "1")             # Wheel Left
+dpadDown    = OBDStruct((0x62412C08 ^ keyBase), False, "2")             # Wheel Right   
  
 dpadButtons   = [dpadUp, dpadDown]
 
@@ -215,9 +220,9 @@ def key_clb(data):
             keyButton.releaseButton()
     return
 
-obd.logger.setLevel(obd.logging.DEBUG)
+#obd.logger.setLevel(obd.logging.DEBUG)
 
-connection = obd.OBD("COM11", protocol = "B")
+connection = obd.OBD("COM1", protocol = "B")
 
 connection.supported_commands.add(rev)
 connection.supported_commands.add(light)
@@ -226,10 +231,10 @@ connection.supported_commands.add(dpad)
 connection.supported_commands.add(key)
 
 while(True):
-#    rev_clb(connection.query(rev))
-#    light_clb(connection.query(light))
+    rev_clb(connection.query(rev))
+    light_clb(connection.query(light))
     sw_clb(connection.query(sw))
-#    dpad_clb(connection.query(dpad))
-#    key_clb(connection.query(key))
-    time.sleep(0.5)
+    dpad_clb(connection.query(dpad))
+    key_clb(connection.query(key))
+    #time.sleep(0.01)
     
