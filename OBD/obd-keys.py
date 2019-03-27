@@ -48,7 +48,7 @@ revCMD      = b"223B54"
 revHeader   = b'000726'
 revBytes    = 2
 revBase     = 0x623B540000
-revGear     = OBDStruct((0x623B540001 ^ revBase), None, None)
+revGear     = OBDStruct((0x623B540001 ^ revBase), False, None)
 
 rev = OBDCommand("Reverse Gear",
                "Decode Reverse Gear Command",
@@ -74,7 +74,7 @@ lightCMD    = b"227151"
 lightHeader = b'000726'
 lightBytes  = 2
 lightBase   = 0x6271510000
-lightBeam   = OBDStruct((0x6271510008 ^ lightBase), None, None)
+lightBeam   = OBDStruct((0x6271510008 ^ lightBase), False, None)
 
 light = OBDCommand("Light status",
                "Decode Light status Command",
@@ -138,7 +138,7 @@ dpadBase   = 0x62412C00
 dpadRight   = OBDStruct((0x62412C02 ^ dpadBase), False, "left arrow")    # Hamburger Menu
 dpadUp      = OBDStruct((0x62412C10 ^ dpadBase), False, "1")             # Wheel Left
 dpadDown    = OBDStruct((0x62412C08 ^ dpadBase), False, "2")             # Wheel Right   
- 
+
 dpadButtons   = [dpadUp, dpadDown]
 
 dpad = OBDCommand("DPAD",
@@ -148,8 +148,8 @@ dpad = OBDCommand("DPAD",
                d.drop,
                ECU.ALL,
                True,
-               dpadHeader)   
-               
+               dpadHeader)
+
 def dpad_clb(data):
     data = bytes_to_int(data.messages[0].data[3:])
     for c, dpadButton in enumerate(dpadButtons, 1):
@@ -161,7 +161,7 @@ def dpad_clb(data):
             dpadButton.isPressing = False
             dpadButton.releaseButton()
     return
-   
+
 keyCMD     = b"228051"
 keyHeader  = b'0007A5'
 keyBytes   = 4
@@ -176,10 +176,10 @@ keyBase    = 0x62805100000000
 # key7       = OBDStruct((0x62805100000002 ^ keyBase), False, "7")           # Slam!
 # key8       = OBDStruct((0x62805100000004 ^ keyBase), False, "8")           # Veronica
 # key9       = OBDStruct((0x62805100000008 ^ keyBase), False, "9")           # Radio10
-keyStar    = OBDStruct((0x62805100000010 ^ keyBase), False, "escape")      # Esc
-keyHash    = OBDStruct((0x62805100000020 ^ keyBase), False, "escape")      # Esc
+keyStar    = OBDStruct((0x62805100000010 ^ keyBase), False, "down arrow")      # Esc
+keyHash    = OBDStruct((0x62805100000020 ^ keyBase), False, "up arrow")      # Esc
 keyInfo    = OBDStruct((0x62805140000000 ^ keyBase), False, "left arrow")  # Hamburger Menu
-keyReject  = OBDStruct((0x62805100040000 ^ keyBase), False, "left arrow")  # Hamburger Menu
+# keyReject  = OBDStruct((0x62805100040000 ^ keyBase), False, "left arrow")  # Hamburger Menu
 keyNext    = OBDStruct((0x62805100080000 ^ keyBase), False, "n")           # Next
 keyPrev    = OBDStruct((0x62805100020000 ^ keyBase), False, "v")           # Previous
 keyOK      = OBDStruct((0x62805100200000 ^ keyBase), False, "return")      # Enter
@@ -222,7 +222,7 @@ def key_clb(data):
 
 #obd.logger.setLevel(obd.logging.DEBUG)
 
-connection = obd.OBD("COM1", protocol = "B")
+connection = obd.OBD("/dev/ttyUSB0", protocol = "B")
 
 connection.supported_commands.add(rev)
 connection.supported_commands.add(light)
@@ -236,5 +236,4 @@ while(True):
     sw_clb(connection.query(sw))
     dpad_clb(connection.query(dpad))
     key_clb(connection.query(key))
-    #time.sleep(0.01)
-    
+#    time.sleep(0.5)
