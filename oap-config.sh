@@ -74,6 +74,16 @@ function power_config() {
     sudo sh -c "echo 'max_usb_current=1' >> /boot/config.txt"
 }
 
+# uGreen DAB I2S
+function activate_dab_i2s() {
+    sudo sed -i 's/^dtparam=spi=on.*//' /boot/config.txt
+    sudo sed -i 's/^dtparam=i2s=on.*//' /boot/config.txt
+    sudo sed -i 's/^dtoverlay=audiosense-pi.*//' /boot/config.txt
+    sudo sh -c "echo 'dtparam=spi=on' >> /boot/config.txt"
+    sudo sh -c "echo 'dtparam=i2s=on' >> /boot/config.txt"
+    sudo sh -c "echo 'dtoverlay=audiosense-pi' >> /boot/config.txt"
+}
+
 # RTC functions
 function activate_rtc() {
     activate_i2c
@@ -106,5 +116,6 @@ set_wallpaper
 config_oap
 install_rearcam
 # activate_rtc
+# activate_dab_i2s
 install_services
 activate_services
