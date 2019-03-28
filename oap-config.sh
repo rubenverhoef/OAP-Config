@@ -130,6 +130,7 @@ function activate_i2c() {
     sudo sh -c "echo 'dtoverlay=i2c_arm=on' >> /boot/config.txt"
 }
 
+killall autoapp
 rpi_init
 remove_ssh_message
 relay_config
