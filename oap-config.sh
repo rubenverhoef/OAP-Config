@@ -6,6 +6,27 @@ function remove_ssh_message() {
     sudo rm -f /etc/xdg/lxsession/LXDE-pi/sshpwd.sh
 }
 
+# RPI init (set country, language and timezone)
+function rpi_init() {
+    # Remove piwiz
+    sudo apt-get remove piwiz -y
+    # WiFi
+    sudo wpa_cli -i wlan0 set country NL
+    sudo iw reg set NL
+    sudo wpa_cli -i wlan0 save_config
+
+    # Timezone
+    sudo rm /etc/timezone
+    sudo sh -c "echo 'Europe/Amsterdam' >> /etc/timezone"
+    sudo rm /etc/localtime
+    sudo dpkg-reconfigure --frontend noninteractive tzdata
+
+    # Locale
+    sudo sed -i 's/^# nl_NL.UTF-8 UTF-8/nl_NL.UTF-8 UTF-8/' /etc/locale.gen
+    sudo locale-gen
+    sudo LC_ALL=nl_NL.UTF-8 LANG=nl_NL.UTF-8 LANGUAGE=nl_NL.UTF-8 update-locale LC_ALL=nl_NL.UTF-8 LANG=nl_NL.UTF-8 LANGUAGE=nl_NL.UTF-8
+}
+
 # Set Wallpaper
 function set_wallpaper() {
     install -m 644 /boot/OAP-Config/wallpaper.png                      "/home/pi"
@@ -109,6 +130,7 @@ function activate_i2c() {
     sudo sh -c "echo 'dtoverlay=i2c_arm=on' >> /boot/config.txt"
 }
 
+rpi_init
 remove_ssh_message
 relay_config
 power_config
