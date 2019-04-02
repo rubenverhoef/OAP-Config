@@ -11,6 +11,13 @@ function remove_ssh_message() {
     rm -f /etc/xdg/lxsession/LXDE-pi/sshpwd.sh
 }
 
+# Auto hide taskbar
+function hide_taskbar() {
+    sed -i 's/^autohide=0/autohide=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+    sed -i 's/^heightwhenhidden=2/heightwhenhidden=0/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+    sed -i 's/^@point-rpi//' /home/pi/.config/lxsession/LXDE-pi/autostart
+}
+
 # RPI init (set country, language and timezone)
 function rpi_init() {
     # Remove piwiz
