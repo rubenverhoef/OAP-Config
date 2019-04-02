@@ -30,10 +30,12 @@ class OBDStruct:
         keyboard.release_key(self.button)
 
     def revCamOn(self):
+        keyboard.tap_key(keyboard.function_keys[6])
         os.chdir("/opt/OAP/cam_overlay/")
         subprocess.Popen(["./cam_overlay.bin", "-d", "/dev/v4l/by-id/usb-fushicai_usbtv007_300000000002-video-index0"])
 
     def revCamOff(self):
+        keyboard.tap_key(keyboard.function_keys[6])
         subprocess.Popen(["killall", "cam_overlay.bin"])
     
     def ModeNight(self):
