@@ -130,6 +130,10 @@ function activate_i2c() {
     sudo sh -c "echo 'dtoverlay=i2c_arm=on' >> /boot/config.txt"
 }
 
+function set_permissions() {
+    sudo chown -R pi:pi /home/pi
+}
+
 killall autoapp
 rpi_init
 remove_ssh_message
@@ -142,3 +146,4 @@ install_rearcam
 # activate_dab_i2s
 install_services
 activate_services
+set_permissions
