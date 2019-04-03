@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=openauto
+Exec=/usr/local/bin/openauto
+Terminal=false
+Type=Application
+Icon=/home/pi/icons/openauto.png

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Reboot
+Exec=sudo reboot
+Terminal=false
+Type=Application
+Icon=/home/pi/icons/reboot.png
