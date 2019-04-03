@@ -5,6 +5,17 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# Desktop icons
+function set_icons() {
+    rm -f /home/pi/Desktop/openauto
+
+    install -m 644 /boot/OAP-Config/desktop/openauto.png        "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/desktop/reboot.png          "/home/pi/icons"
+
+    install -m 644 /boot/OAP-Config/desktop/openauto.desktop    "/home/pi/Desktop"
+    install -m 644 /boot/OAP-Config/desktop/reboot.desktop      "/home/pi/Desktop"
+}
+
 # Activate SSH root
 function remove_ssh_message() {
     rm -f /etc/profile.d/sshpwd.sh
@@ -149,6 +160,7 @@ remove_ssh_message
 relay_config
 power_config
 set_wallpaper
+set_icons
 config_oap
 install_rearcam
 # activate_rtc
