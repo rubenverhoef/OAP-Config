@@ -65,6 +65,26 @@ function config_oap() {
     install -m 644 /boot/OAP-Config/config/openauto_license.dat                 "/home/pi"
     install -m 644 /boot/OAP-Config/config/openauto_system.ini                  "/home/pi"
     install -m 644 /boot/OAP-Config/config/openauto_tos.dat                     "/home/pi"
+    install_radio_icons
+}
+
+# Copy all the radio icons
+install_radio_icons() {
+    install -m 644 /boot/OAP-Config/DAB/skyradio.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/skyhits.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/qmusic-nonstop.png      "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/qmusic.png              "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/538.png                 "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/538top50.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/slam.png                "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/veronica.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/radio10.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/sublime.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/100nl.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/radio1.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/radio2.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/3fm.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/funx.png             "/home/pi/icons"
 }
 
 # Install cam_overlay Rearcam
@@ -81,19 +101,21 @@ function install_rearcam() {
 function install_services() {
     install -m 644 /boot/OAP-Config/services/user_startup.service                "/etc/systemd/system/"
     install -m 644 /boot/OAP-Config/services/gpio_shutdown.service               "/etc/systemd/system/"
-    install -m 644 /boot/OAP-Config/services/DABBoard.service                    "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/service_dab.service                 "/etc/systemd/system/"
 
     install -d "/opt/OAP"
     install -m 755 /boot/OAP-Config/scripts/service_user_startup.sh             "/opt/OAP/"
     install -m 755 /boot/OAP-Config/scripts/service_gpio_shutdown.sh            "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/DABBoard/radio_cli                          "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/DABBoard.sh                         "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/DAB/TuneDAB.sh                              "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/scripts/service_dab.sh                      "/opt/OAP/"
 }
 
 # Activate services
 function activate_services() {
     systemctl enable user_startup.service
     systemctl enable gpio_shutdown.service
+    systemctl enable service_dab.service
 }
 
 # Shutdown functions
