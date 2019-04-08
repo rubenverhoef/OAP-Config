@@ -5,6 +5,12 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# Update the system
+function update_system() {
+    sudo apt-get update -y
+    sudo apt-get dist-upgrade -y
+}
+
 # Desktop icons
 function set_icons() {
     rm -f /home/pi/Desktop/openauto
@@ -185,6 +191,7 @@ function set_permissions() {
 }
 
 killall autoapp
+update_system
 rpi_init
 remove_ssh_message
 relay_config
