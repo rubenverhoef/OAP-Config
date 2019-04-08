@@ -81,10 +81,13 @@ function install_rearcam() {
 function install_services() {
     install -m 644 /boot/OAP-Config/services/user_startup.service                "/etc/systemd/system/"
     install -m 644 /boot/OAP-Config/services/gpio_shutdown.service               "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/DABBoard.service                    "/etc/systemd/system/"
 
     install -d "/opt/OAP"
     install -m 755 /boot/OAP-Config/scripts/service_user_startup.sh             "/opt/OAP/"
     install -m 755 /boot/OAP-Config/scripts/service_gpio_shutdown.sh            "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/DABBoard/radio_cli                          "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/scripts/DABBoard.sh                         "/opt/OAP/"
 }
 
 # Activate services
@@ -115,11 +118,16 @@ function power_config() {
     sh -c "echo 'max_usb_current=1' >> /boot/config.txt"
 }
 
-# uGreen DAB I2S
-function activate_dab_i2s() {
+# uGreen DABBoard
+function activate_dab() {
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sed -i 's/^# DAB Setup.*//' /boot/config.txt
     sed -i 's/^dtparam=spi=on.*//' /boot/config.txt
     sed -i 's/^dtparam=i2s=on.*//' /boot/config.txt
     sed -i 's/^dtoverlay=audiosense-pi.*//' /boot/config.txt
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sh -c "echo '' >> /boot/config.txt"
+    sh -c "echo '# DAB Setup' >> /boot/config.txt"
     sh -c "echo 'dtparam=spi=on' >> /boot/config.txt"
     sh -c "echo 'dtparam=i2s=on' >> /boot/config.txt"
     sh -c "echo 'dtoverlay=audiosense-pi' >> /boot/config.txt"
@@ -159,12 +167,12 @@ rpi_init
 remove_ssh_message
 relay_config
 power_config
+activate_dab
+# activate_rtc
 set_wallpaper
 set_icons
 config_oap
 install_rearcam
-# activate_rtc
-# activate_dab_i2s
 install_services
 activate_services
 set_permissions

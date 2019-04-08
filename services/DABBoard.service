@@ -1,0 +1,11 @@
+[Unit]
+ Description=DABBoard startup service
+
+[Service]
+ Type=oneshot
+ WorkingDirectory=/opt/OAP/
+ ExecStart=/opt/OAP/DABBoard.sh
+ RemainAfterExit=yes
+
+[Install]
+ WantedBy=multi-user.target
