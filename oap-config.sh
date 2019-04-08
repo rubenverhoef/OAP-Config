@@ -70,21 +70,21 @@ function config_oap() {
 
 # Copy all the radio icons
 install_radio_icons() {
-    install -m 644 /boot/OAP-Config/DAB/skyradio.png            "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/skyhits.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/qmusic-nonstop.png      "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/qmusic.png              "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/538.png                 "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/538top50.png            "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/slam.png                "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/veronica.png            "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/radio10.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/sublime.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/100nl.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/radio1.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/radio2.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/3fm.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/funx.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/skyradio.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/skyhits.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/qmusic-nonstop.png      "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/qmusic.png              "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/538.png                 "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/538top50.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/slam.png                "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/veronica.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/radio10.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/sublime.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/100nl.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/radio1.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/radio2.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/3fm.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/funx.png             "/home/pi/icons"
 }
 
 # Install cam_overlay Rearcam
