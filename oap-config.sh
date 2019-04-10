@@ -105,23 +105,23 @@ function install_rearcam() {
 
 # Install services
 function install_services() {
-    install -m 644 /boot/OAP-Config/services/user_startup.service                "/etc/systemd/system/"
-    install -m 644 /boot/OAP-Config/services/gpio_shutdown.service               "/etc/systemd/system/"
-    install -m 644 /boot/OAP-Config/services/service_dab.service                 "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/user_startup.service               "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/gpio.service                       "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/DABAudio.service                   "/etc/systemd/system/"
 
     install -d "/opt/OAP"
     install -m 755 /boot/OAP-Config/scripts/service_user_startup.sh             "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/service_gpio_shutdown.sh            "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/scripts/service_gpio.sh                     "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/TuneDAB.sh                              "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/service_dab.sh                      "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/scripts/DABAudio.sh                         "/opt/OAP/"
 }
 
 # Activate services
 function activate_services() {
     systemctl enable user_startup.service
-    systemctl enable gpio_shutdown.service
-    systemctl enable service_dab.service
+    systemctl enable gpio.service
+    systemctl enable DABAudio.service
 }
 
 # Shutdown functions
