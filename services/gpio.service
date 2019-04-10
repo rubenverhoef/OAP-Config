@@ -1,9 +1,9 @@
 [Unit]
- Description=OAP gpio shutdown service
+ Description=OAP gpio service
 
 [Service]
  Type=simple
- ExecStart=/opt/OAP/service_gpio_shutdown.sh
+ ExecStart=/opt/OAP/service_gpio.sh
  RemainAfterExit=yes
 
 [Install]
