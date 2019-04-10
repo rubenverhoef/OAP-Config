@@ -1,0 +1,10 @@
+[Unit]
+ Description=I2S DAB redirection
+ 
+[Service]
+ Type=oneshot
+ ExecStart=/opt/OAP/DABAudio.sh
+ RemainAfterExit=yes
+
+[Install]
+ WantedBy=multi-user.target
