@@ -26,7 +26,7 @@ runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_proper
 # Redirect Virtual sink to audio output sink
 runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
 # Redirect DAB audio to faded output
-runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded"
+DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 
 # Some variables
 AUX_STATE=0
@@ -46,11 +46,13 @@ while true; do
     if [ $AUX_GPIO -ne 0 ] && [$AUX_STATE -ne 1]; then
         # Redirect AUX audio to faded output
         AUX_STATE=1
+        runuser -l pi -c "pactl unload-module $DAB_MOD"
         AUX_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$AUX sink=Faded")
     elif [ $AUX_GPIO -ne 1 ] && [$AUX_STATE -ne 0]; then
         # Disable AUX redirect
         AUX_STATE=0
         runuser -l pi -c "pactl unload-module $AUX_MOD"
+        DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
     fi
     AA_VOICE=$(pacmd list-sink-inputs | awk 'BEGIN { ORS=" " } /index:/ {print $2} /state:/ {print $2} /application.process.binary =/ {print $3} /channel map:/ {printf "%s\n\r", $3;};' | grep "RUNNING" | grep "mono" | grep "autoapp" | awk '{ print $2 }')
     AA_ASSISTANT=$(pacmd list-source-outputs | awk 'BEGIN { ORS=" " } /index:/ {print $2} /application.process.binary =/ {print $3} /channel map:/ {printf "%s\n\r", $3;};' | grep "mono" | grep "autoapp" | awk '{ print $2 }')
