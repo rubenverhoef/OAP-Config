@@ -1,9 +1,9 @@
 [Unit]
- Description=OAP gpio service
+ Description=Custom OAP startup service
 
 [Service]
  Type=simple
- ExecStart=/opt/OAP/service_gpio.sh
+ ExecStart=/opt/OAP/service_OAP_startup.sh
  RemainAfterExit=yes
 
 [Install]
