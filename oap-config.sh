@@ -157,6 +157,10 @@ function activate_dab() {
 
 # RTC functions
 function activate_rtc() {
+    sudo apt-get remove fake-hwclock -y
+    sudo update-rc.d -f fake-hwclock remove
+    sudo rm /etc/fake-hwclock.data
+    sed -i '/systemd/,+3 d' /home/pi/hwclock-set
     activate_i2c
     sed -i '/./,/^$/!d' /boot/config.txt
     sed -i 's/^# RTC Setup.*//' /boot/config.txt
@@ -165,9 +169,6 @@ function activate_rtc() {
     sh -c "echo '' >> /boot/config.txt"
     sh -c "echo '# RTC Setup' >> /boot/config.txt"
     sh -c "echo 'dtoverlay=i2c-rtc,ds3231' >> /boot/config.txt"
-    # systemctl enable hwclock-load.service >/dev/null 2>&1
-    # systemctl daemon-reload
-	# timedatectl set-timezone "$(cat /etc/timezone)"
 }
 
 function activate_i2c() {
@@ -184,6 +185,27 @@ function set_permissions() {
     chown -R pi:pi /home/pi
 }
 
+function activate_gps() {
+    # Remove UART from console
+    sed -i 's/ console=serial0,115200//g' /boot/cmdline.txt
+
+    # Config.txt UART
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sed -i 's/^# GPS Setup.*//' /boot/config.txt
+    sed -i '/enable_uart=1/d' /boot/config.txt
+    sed -i '/dtoverlay=pps-gpio/d' /boot/config.txt
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sh -c "echo '' >> /boot/config.txt"
+    sh -c "echo '# GPS Setup' >> /boot/config.txt"
+    sh -c "echo 'enable_uart=1' >> /boot/config.txt"
+    sh -c "echo 'dtoverlay=pps-gpio' >> /boot/config.txt"
+
+    # GPSD, use UART
+    sed -i 's/^USBAUTO="true"/USBAUTO="false"/' /etc/default/gpsd
+    sed -i 's/^DEVICES=""/DEVICES="\/dev\/serial0 \/dev\/pps0"/' /etc/default/gpsd
+    sed -i 's/^GPSD_OPTIONS=""/GPSD_OPTIONS="-n"/' /etc/default/gpsd
+}
+
 killall autoapp
 update_system
 rpi_init
@@ -191,7 +213,8 @@ remove_ssh_message
 relay_config
 power_config
 activate_dab
-# activate_rtc
+activate_rtc
+activate_gps
 set_wallpaper
 set_icons
 config_oap
