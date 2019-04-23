@@ -30,39 +30,45 @@ DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=F
 
 # Some variables
 AUX_STATE=0
+FADE_STATE=0
 AUX_MOD=0
 
 # Main loop for: (checking inputs, )
-while true; do
+for (( ; ; ))
+do
     # Shutdown trigger
     IGNITION_GPIO=`gpio -g read 13`
-    if [ $IGNITION_GPIO -ne 0 ] ; then
-        if [ ! -f /tmp/android_device ] && [ ! -f /tmp/btdevice ]; then # this needs to be implemented, see issue #14
-            sudo shutdown -h now
-        fi
+    AA_RUNNING=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | awk '{ print $1 }')
+    if [ $IGNITION_GPIO -ne 0 ] && [ -z "$AA_RUNNING" ]; then
+        sudo shutdown -h now
     fi
     # AUX redirect trigger
     AUX_GPIO=`gpio -g read 22`
-    if [ $AUX_GPIO -ne 0 ] && [$AUX_STATE -ne 1]; then
+    if [ $AUX_GPIO -ne 0 ] && [ $AUX_STATE -ne 1 ]; then
         # Redirect AUX audio to faded output
         AUX_STATE=1
         runuser -l pi -c "pactl unload-module $DAB_MOD"
         AUX_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$AUX sink=Faded")
-    elif [ $AUX_GPIO -ne 1 ] && [$AUX_STATE -ne 0]; then
+    elif [ $AUX_GPIO -ne 1 ] && [ $AUX_STATE -ne 0 ]; then
         # Disable AUX redirect
         AUX_STATE=0
         runuser -l pi -c "pactl unload-module $AUX_MOD"
         DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
     fi
-    AA_VOICE=$(pacmd list-sink-inputs | awk 'BEGIN { ORS=" " } /index:/ {print $2} /state:/ {print $2} /application.process.binary =/ {print $3} /channel map:/ {printf "%s\n\r", $3;};' | grep "RUNNING" | grep "mono" | grep "autoapp" | awk '{ print $2 }')
-    AA_ASSISTANT=$(pacmd list-source-outputs | awk 'BEGIN { ORS=" " } /index:/ {print $2} /application.process.binary =/ {print $3} /channel map:/ {printf "%s\n\r", $3;};' | grep "mono" | grep "autoapp" | awk '{ print $2 }')
-    AA_MUSIC=$(pacmd list-sink-inputs | awk 'BEGIN { ORS=" " } /index:/ {print $2} /state:/ {print $2} /application.process.binary =/ {print $3} /channel map:/ {printf "%s\n\r", $3;};' | grep "RUNNING" | grep "front" | grep "autoapp" | awk '{ print $2 }')
-    if [ $AA_VOICE ] || [ $AA_ASSISTANT ] || [ $AA_MUSIC ]; then
+    # Mute faded group when AA is talking, playing music or listening
+    AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
+    AA_MUSIC=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "front" | awk '{ print $1 }')
+    AA_VOICE=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
+
+    if [ -z "$AA_ASSISTANT" ] && [ -z "$AA_VOICE" ] && [ -z "$AA_MUSIC" ] ; then
+        if [ $FADE_STATE -ne 0 ]; then
+            FADE_STATE=0
+            runuser -l pi -c "pactl set-sink-volume Faded 100%"
+        fi
+    elif [ $FADE_STATE -ne 1 ]; then
+        FADE_STATE=1
         runuser -l pi -c "pactl set-sink-volume Faded 0%"
-    else
-        runuser -l pi -c "pactl set-sink-volume Faded 100%"
     fi
-    sleep 0.1
 done
 
 exit 0

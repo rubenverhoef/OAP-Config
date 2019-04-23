@@ -29,6 +29,35 @@ class OBDStruct:
     def releaseButton(self):
         keyboard.release_key(self.button)
 
+    def TuneDAB(self, ComponentID, ServiceID, FreqIndex):
+        os.chdir("/opt/OAP/")
+        if(self.button is "0"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-k"]) # Turn off DAB
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-b", "D", "-o", "1"]) # Re-enable DAB
+        elif(self.button is "1"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "5", "-e", "33734", "-f", "28", "-p"])
+        elif(self.button is "2"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "16", "-e", "34824", "-f", "28", "-p"])
+        elif(self.button is "3"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "4", "-e", "34820", "-f", "28", "-p"])
+        elif(self.button is "4"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "10", "-e", "33736", "-f", "28", "-p"])
+        elif(self.button is "5"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "1", "-e", "33735", "-f", "28", "-p"])
+        elif(self.button is "6"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "2", "-e", "34818", "-f", "28", "-p"])
+        elif(self.button is "7"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "11", "-e", "33445", "-f", "28", "-p"])
+        elif(self.button is "8"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "7", "-e", "33761", "-f", "28", "-p"])
+        elif(self.button is "9"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "17", "-e", "33746", "-f", "28", "-p"])
+
+    def DABoff(self):
+        os.chdir("/opt/OAP/")
+        subprocess.Popen(["sudo", "./TuneDAB.sh", "-k"]) # Turn off DAB
+        subprocess.Popen(["sudo", "./TuneDAB.sh", "-b", "D", "-o", "1"]) # Re-enable DAB
+
     def revCamOn(self):
         keyboard.tap_key(keyboard.function_keys[6])
         os.chdir("/opt/OAP/cam_overlay/")
@@ -168,18 +197,18 @@ keyCMD     = b"228051"
 keyHeader  = b'0007A5'
 keyBytes   = 4
 keyBase    = 0x62805100000000
-# key0       = OBDStruct((0x62805100000400 ^ keyBase), False, "0")           # Stop DAB radio
-# key1       = OBDStruct((0x62805100000800 ^ keyBase), False, "1")           # Sky Radio
-# key2       = OBDStruct((0x62805100001000 ^ keyBase), False, "2")           # Sky Rdaio Hits
-# key3       = OBDStruct((0x62805100002000 ^ keyBase), False, "3")           # Qmusic non-stop
-# key4       = OBDStruct((0x62805100004000 ^ keyBase), False, "4")           # Qmusic
-# key5       = OBDStruct((0x62805100008000 ^ keyBase), False, "5")           # 538
-# key6       = OBDStruct((0x62805100000001 ^ keyBase), False, "6")           # 538Top50
-# key7       = OBDStruct((0x62805100000002 ^ keyBase), False, "7")           # Slam!
-# key8       = OBDStruct((0x62805100000004 ^ keyBase), False, "8")           # Veronica
-# key9       = OBDStruct((0x62805100000008 ^ keyBase), False, "9")           # Radio10
-keyStar    = OBDStruct((0x62805100000010 ^ keyBase), False, "down arrow")      # Esc
-keyHash    = OBDStruct((0x62805100000020 ^ keyBase), False, "up arrow")      # Esc
+key0       = OBDStruct((0x62805100000400 ^ keyBase), False, "0")           # Stop DAB radio
+key1       = OBDStruct((0x62805100000800 ^ keyBase), False, "1")           # Sky Radio
+key2       = OBDStruct((0x62805100001000 ^ keyBase), False, "2")           # Sky Rdaio Hits
+key3       = OBDStruct((0x62805100002000 ^ keyBase), False, "3")           # Qmusic non-stop
+key4       = OBDStruct((0x62805100004000 ^ keyBase), False, "4")           # Qmusic
+key5       = OBDStruct((0x62805100008000 ^ keyBase), False, "5")           # 538
+key6       = OBDStruct((0x62805100000001 ^ keyBase), False, "6")           # 538Top50
+key7       = OBDStruct((0x62805100000002 ^ keyBase), False, "7")           # Slam!
+key8       = OBDStruct((0x62805100000004 ^ keyBase), False, "8")           # Veronica
+key9       = OBDStruct((0x62805100000008 ^ keyBase), False, "9")           # Radio10
+keyStar    = OBDStruct((0x62805100000010 ^ keyBase), False, "down arrow")  # Esc
+keyHash    = OBDStruct((0x62805100000020 ^ keyBase), False, "up arrow")    # Esc
 keyInfo    = OBDStruct((0x62805140000000 ^ keyBase), False, "left arrow")  # Hamburger Menu
 # keyReject  = OBDStruct((0x62805100040000 ^ keyBase), False, "left arrow")  # Hamburger Menu
 keyNext    = OBDStruct((0x62805100080000 ^ keyBase), False, "n")           # Next
@@ -200,6 +229,7 @@ keyAUX     = OBDStruct((0x62805110000000 ^ keyBase), False, "x")           # Pla
 # keyVolDown = OBDStruct((0x628051FFFFFFFF ^ keyBase), False, None) # don't logged yet
 
 keyButtons  = [keyStar, keyHash, keyInfo, keyNext, keyPrev, keyOK, keyAUX]
+DABButtons  = [key0, key1, key2, key3, key4, key5, key6, key7, key8, key9]
 
 key = OBDCommand("Radio Keys",
                "Decode Radio Keys",
@@ -220,6 +250,13 @@ def key_clb(data):
         elif(keyButton.isPressing is True):
             keyButton.isPressing = False
             keyButton.releaseButton()
+    for c, keyButton in enumerate(DABButtons, 1):
+        if(keyButton.bitSelect & data):
+            if(keyButton.isPressing is False):
+                keyButton.isPressing = True
+                keyButton.TuneDAB()
+        elif(keyButton.isPressing is True):
+            keyButton.isPressing = False
     return
 
 #obd.logger.setLevel(obd.logging.DEBUG)

@@ -116,7 +116,6 @@ function install_services() {
 # Activate services
 function activate_services() {
     systemctl enable OAP_startup.service
-    systemctl enable DABAudio.service
 }
 
 # Shutdown functions
