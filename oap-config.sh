@@ -157,18 +157,8 @@ function activate_dab() {
 
 # RTC functions
 function activate_rtc() {
-    sudo apt-get remove fake-hwclock -y
-    sudo update-rc.d -f fake-hwclock remove
-    sudo rm /etc/fake-hwclock.data
-    sed -i '/systemd/,+3 d' /home/pi/hwclock-set
     activate_i2c
-    sed -i '/./,/^$/!d' /boot/config.txt
-    sed -i 's/^# RTC Setup.*//' /boot/config.txt
-    sed -i '/dtoverlay=i2c-rtc/d' /boot/config.txt
-    sed -i '/./,/^$/!d' /boot/config.txt
-    sh -c "echo '' >> /boot/config.txt"
-    sh -c "echo '# RTC Setup' >> /boot/config.txt"
-    sh -c "echo 'dtoverlay=i2c-rtc,ds3231' >> /boot/config.txt"
+    /usr/bin/python3 /usr/local/bin/bwsrtc
 }
 
 function activate_i2c() {
