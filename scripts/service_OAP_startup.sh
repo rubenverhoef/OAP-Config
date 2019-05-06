@@ -14,6 +14,8 @@ DAB=$(echo $DAB | awk '{ print $1 }')
 gpio -g mode 12 pwm
 # Enable pullup of Ignition pin
 gpio -g mode 13 up
+# Set day/night output
+gpio -g mode 7 out
 
 # OBD connection for Steering Wheel and other keys
 sudo /usr/bin/python3 /boot/OAP-Config/OBD/obd-keys.py &
