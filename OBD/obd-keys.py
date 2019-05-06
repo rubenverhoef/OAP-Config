@@ -68,11 +68,11 @@ class OBDStruct:
         subprocess.Popen(["killall", "cam_overlay.bin"])
     
     def ModeNight(self):
-        keyboard.tap_key(keyboard.function_keys[2])
+        subprocess.Popen(["gpio", "-g", "write", "7", "1"])
         subprocess.Popen(["gpio", "-g", "pwm", "12", "800"])
 
     def ModeDay(self):
-        keyboard.tap_key(keyboard.function_keys[2])
+        subprocess.Popen(["gpio", "-g", "write", "7", "0"])
         subprocess.Popen(["gpio", "-g", "pwm", "12", "0"])
 
 revCMD      = b"223B54"
