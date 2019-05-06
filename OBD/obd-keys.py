@@ -32,32 +32,27 @@ class OBDStruct:
     def TuneDAB(self, ComponentID, ServiceID, FreqIndex):
         os.chdir("/opt/OAP/")
         if(self.button is "0"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-k"]) # Turn off DAB
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-b", "D", "-o", "1"]) # Re-enable DAB
+            subprocess.Popen(["sudo", "./radio_cli", "-k"]) # Turn off DAB
+            subprocess.Popen(["sudo", "./radio_cli", "-b", "D", "-o", "1"]) # Re-enable DAB
         elif(self.button is "1"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "5", "-e", "33734", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "5", "33734", "28"])
         elif(self.button is "2"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "16", "-e", "34824", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "16", "34824", "28"])
         elif(self.button is "3"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "4", "-e", "34820", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "4", "34820", "28"])
         elif(self.button is "4"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "10", "-e", "33736", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "10", "33736", "28"])
         elif(self.button is "5"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "1", "-e", "33735", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "1", "33735", "28"])
         elif(self.button is "6"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "2", "-e", "34818", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "2", "34818", "28"])
         elif(self.button is "7"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "11", "-e", "33445", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "11", "33445", "28"])
         elif(self.button is "8"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "7", "-e", "33761", "-f", "28", "-p"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "7", "33761", "28"])
         elif(self.button is "9"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "17", "-e", "33746", "-f", "28", "-p"])
-
-    def DABoff(self):
-        os.chdir("/opt/OAP/")
-        subprocess.Popen(["sudo", "./TuneDAB.sh", "-k"]) # Turn off DAB
-        subprocess.Popen(["sudo", "./TuneDAB.sh", "-b", "D", "-o", "1"]) # Re-enable DAB
-
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "17", "33746", "28"])
+            
     def revCamOn(self):
         keyboard.tap_key(keyboard.function_keys[6])
         os.chdir("/opt/OAP/cam_overlay/")
