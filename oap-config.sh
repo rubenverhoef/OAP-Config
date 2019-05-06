@@ -9,6 +9,7 @@ fi
 function update_system() {
     sudo apt-get update -y
     sudo apt-get dist-upgrade -y
+    sudo rpi-update
 }
 
 # Desktop icons
