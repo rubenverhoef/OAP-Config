@@ -10,6 +10,7 @@ function update_system() {
     sudo apt-get update -y
     sudo apt-get dist-upgrade -y
     sudo rpi-update
+    sudo apt-get autoremove -y
 }
 
 # Desktop icons
