@@ -272,7 +272,7 @@ connection.supported_commands.add(key)
 while(True):
     rev_clb(connection.query(rev))
     light_clb(connection.query(light))
-    sw_clb(connection.query(sw))
-    dpad_clb(connection.query(dpad))
-    key_clb(connection.query(key))
-#    time.sleep(0.5)
+    for x in range(10):
+        sw_clb(connection.query(sw))
+        dpad_clb(connection.query(dpad))
+        key_clb(connection.query(key))
