@@ -199,6 +199,7 @@ killall autoapp
 update_system
 rpi_init
 remove_ssh_message
+hide_taskbar
 relay_config
 power_config
 activate_dab
