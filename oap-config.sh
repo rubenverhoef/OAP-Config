@@ -182,16 +182,14 @@ function activate_gps() {
     sed -i '/./,/^$/!d' /boot/config.txt
     sed -i 's/^# GPS Setup.*//' /boot/config.txt
     sed -i '/enable_uart=1/d' /boot/config.txt
-    sed -i '/dtoverlay=pps-gpio/d' /boot/config.txt
     sed -i '/./,/^$/!d' /boot/config.txt
     sh -c "echo '' >> /boot/config.txt"
     sh -c "echo '# GPS Setup' >> /boot/config.txt"
     sh -c "echo 'enable_uart=1' >> /boot/config.txt"
-    sh -c "echo 'dtoverlay=pps-gpio' >> /boot/config.txt"
 
     # GPSD, use UART
     sed -i 's/^USBAUTO="true"/USBAUTO="false"/' /etc/default/gpsd
-    sed -i 's/^DEVICES=""/DEVICES="\/dev\/serial0 \/dev\/pps0"/' /etc/default/gpsd
+    sed -i 's/^DEVICES=""/DEVICES="\/dev\/serial0"/' /etc/default/gpsd
     sed -i 's/^GPSD_OPTIONS=""/GPSD_OPTIONS="-n"/' /etc/default/gpsd
 }
 
