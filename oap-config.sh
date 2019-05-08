@@ -60,38 +60,39 @@ function rpi_init() {
 
 # Set Wallpaper
 function set_wallpaper() {
-    install -m 644 /boot/OAP-Config/wallpaper.png                      "/home/pi"
-    install -m 644 /boot/OAP-Config/wallpaper.png                      "/usr/share/plymouth/themes/pix/splash.png"
+    install -m 644 /boot/OAP-Config/wallpaper.png   "/home/pi"
+    install -m 644 /boot/OAP-Config/wallpaper.png   "/usr/share/plymouth/themes/pix/splash.png"
     sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
 # Remove unwanted OAP apps
 function config_oap() {
-    install -m 644 /boot/OAP-Config/config/openauto_applications.ini            "/home/pi"
-    install -m 644 /boot/OAP-Config/config/openauto_controller_service.ini      "/home/pi"
-    install -m 644 /boot/openauto_license.dat                                   "/home/pi"
-    install -m 644 /boot/OAP-Config/config/openauto_system.ini                  "/home/pi"
-    install -m 644 /boot/OAP-Config/config/openauto_tos.dat                     "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_applications.ini        "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_controller_service.ini  "/home/pi"
+    install -m 644 /boot/openauto_license.dat                               "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_system.ini              "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_tos.dat                 "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_wifi_recent.ini         "/home/pi"
     install_radio_icons
 }
 
 # Copy all the radio icons
 install_radio_icons() {
-    install -m 644 /boot/OAP-Config/DAB/icons/skyradio.png            "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/skyhits.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/qmusic-nonstop.png      "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/qmusic.png              "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/538.png                 "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/538top50.png            "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/slam.png                "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/veronica.png            "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/radio10.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/sublime.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/skyradio.png          "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/skyhits.png           "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/qmusic-nonstop.png    "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/qmusic.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/538.png               "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/538top50.png          "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/slam.png              "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/veronica.png          "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/radio10.png           "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/sublime.png           "/home/pi/icons"
     install -m 644 /boot/OAP-Config/DAB/icons/100nl.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/radio1.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/radio2.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/3fm.png             "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/funx.png             "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/radio1.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/radio2.png            "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/3fm.png               "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/DAB/icons/funx.png              "/home/pi/icons"
 }
 
 # Install cam_overlay Rearcam
@@ -195,6 +196,36 @@ function activate_gps() {
     sed -i 's/^GPSD_OPTIONS=""/GPSD_OPTIONS="-n"/' /etc/default/gpsd
 }
 
+function install_raspap() {
+    wget -q https://git.io/voEUQ -O /tmp/raspap && bash /tmp/raspap
+
+    # set SSID, Pass
+    sed -i 's/^ssid=.*/ssid=Ford\ Fiësta\ Ruben/' /etc/hostapd/hostapd.conf
+    sed -i 's/^wpa_passphrase=.*/wpa_passphrase=FordFeestRuben/' /etc/hostapd/hostapd.conf
+
+    # set static ip for android phones
+    sed -i '/./,/^$/!d' /etc/dnsmasq.conf
+    sed -i 's/^dhcp-host=.*//' /etc/dnsmasq.conf
+    sed -i 's/^dhcp-host=.*//' /etc/dnsmasq.conf
+    sed -i '/./,/^$/!d' /etc/dnsmasq.conf
+    sh -c "echo 'dhcp-host=c0:ee:fb:e5:9f:d2,10.3.141.10' >> /etc/dnsmasq.conf" # OnePlus 3T Ruben
+    sh -c "echo 'dhcp-host=50:55:27:ab:f4:1e,10.3.141.11' >> /etc/dnsmasq.conf" # Nexus 5X Anne
+
+    # config OnePlus 3T hotspot to get internet on the RPI
+    sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^network=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^    ssid=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^    psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^    key_mgmt=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^}*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
+    sh -c "echo 'network={' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+    sh -c "echo '    ssid="OnePlus\ 3T\ Ruben"' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+    sh -c "echo '    psk="1\+3TRuben"' >> /etc/wpa_supplicant/wpa_supplicant.conf" # Not secret
+    sh -c "echo '    key_mgmt=WPA-PSK' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+    sh -c "echo '}' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+}
+
 killall autoapp
 update_system
 rpi_init
@@ -211,4 +242,5 @@ config_oap
 install_rearcam
 install_services
 activate_services
+install_raspap
 set_permissions
