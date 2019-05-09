@@ -33,6 +33,7 @@ runuser -l pi -c "pacmd set-default-sink Faded"
 DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 
 # Some variables
+TIME_SET=0
 AUX_STATE=0
 FADE_STATE=0
 SET_SINK=0
@@ -85,6 +86,17 @@ do
         OLD_VOLUME=$(runuser -l pi -c "pactl list sinks" | awk 'BEGIN { ORS=" " } /Name:/ {printf "\r\n%s ", $2;} /Volume:/ {print $5};' | grep "Faded" | awk '{ print $2 }')
         runuser -l pi -c "pactl set-sink-volume Faded 0%"
         FADE_STATE=1
+    fi
+
+    # Set time from DAB radio
+    if [ $TIME_SET -ne 1 ]; then
+        TIME=$(sudo /opt/OAP/radio_cli -t | grep T.*Z | sed 's/T/ /; s/Z/ /')
+        YEAR=$(echo $TIME | awk '{ print $1 }' | sed 's/-.*//')
+
+        if [ -n "$TIME" ] && [ "$YEAR" -gt "0" ]; then
+            TIME_SET=1
+            sudo date -s "$TIME" --utc
+        fi
     fi
 done
 
