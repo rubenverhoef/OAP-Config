@@ -111,6 +111,7 @@ function install_services() {
 
     install -d "/opt/OAP"
     install -m 755 /boot/OAP-Config/scripts/service_OAP_startup.sh              "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/OBD/OBD_startup.sh                          "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/TuneDAB.sh                              "/opt/OAP/"
 }
@@ -118,6 +119,8 @@ function install_services() {
 # Activate services
 function activate_services() {
     systemctl enable OAP_startup.service
+    sed -i '/@bash \/opt\/OAP\/OBD_startup.sh/d' /home/pi/.config/lxsession/LXDE-pi/autostart
+    sh -c "echo '@bash /opt/OAP/OBD_startup.sh' >> /home/pi/.config/lxsession/LXDE-pi/autostart"
 }
 
 # Shutdown functions
