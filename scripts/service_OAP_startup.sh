@@ -33,6 +33,7 @@ runuser -l pi -c "pacmd set-default-sink Faded"
 DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 
 # Some variables
+IGNITION_CNT=0
 TIME_SET=0
 AUX_STATE=0
 FADE_STATE=0
@@ -52,7 +53,12 @@ do
         SET_SINK=0
         IGNITION_GPIO=`gpio -g read 13`
         if [ $IGNITION_GPIO -ne 0 ]; then
-            sudo shutdown -h now
+            let "IGNITION_CNT++"
+            if [ $IGNITION_CNT -gt 5 ]; then
+                sudo shutdown -h now
+            fi
+        else
+            IGNITION_CNT=0
         fi
     elif [ $SET_SINK -ne 1 ]; then
         SET_SINK=1
