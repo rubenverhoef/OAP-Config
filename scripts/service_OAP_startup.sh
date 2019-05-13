@@ -71,12 +71,12 @@ do
     fi
     # AUX redirect trigger
     AUX_GPIO=`gpio -g read 22`
-    if [ $AUX_GPIO -ne 0 ] && [ $AUX_STATE -ne 1 ]; then
+    if [ $AUX_GPIO -ne 1 ] && [ $AUX_STATE -ne 1 ]; then
         # Redirect AUX audio to faded output
         AUX_STATE=1
         runuser -l pi -c "pactl unload-module $DAB_MOD"
         AUX_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$AUX sink=Faded")
-    elif [ $AUX_GPIO -ne 1 ] && [ $AUX_STATE -ne 0 ]; then
+    elif [ $AUX_GPIO -ne 0 ] && [ $AUX_STATE -ne 0 ]; then
         # Disable AUX redirect
         AUX_STATE=0
         runuser -l pi -c "pactl unload-module $AUX_MOD"
