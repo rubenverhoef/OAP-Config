@@ -29,7 +29,7 @@ class OBDStruct:
     def releaseButton(self):
         keyboard.release_key(self.button)
 
-    def TuneDAB(self, ComponentID, ServiceID, FreqIndex):
+    def TuneDAB(self):
         os.chdir("/opt/OAP/")
         if(self.button is "0"):
             subprocess.Popen(["sudo", "./radio_cli", "-k"]) # Turn off DAB
@@ -131,7 +131,7 @@ swBase    = 0x62833C00
 swVoice   = OBDStruct((0x62833C08 ^ swBase), False, "m")       # Voice Command
 swNext    = OBDStruct((0x62833C04 ^ swBase), False, "n")      # Next
 swPrev    = OBDStruct((0x62833C02 ^ swBase), False, "v")      # Previous
-swM       = OBDStruct((0x62833C01 ^ swBase), False, "return") # Enter
+swM       = OBDStruct((0x62833C01 ^ swBase), False, keyboard.enter_key) # Enter
 
 swButtons   = [swVoice, swNext, swPrev, swM]
 
@@ -161,9 +161,9 @@ dpadHeader = b'0007A5'
 dpadBytes  = 1
 dpadBase   = 0x62412C00
 # dpadLeft    = OBDStruct((0x62412C04 ^ dpadBase), False, "1")
-dpadRight   = OBDStruct((0x62412C02 ^ dpadBase), False, "left arrow")    # Hamburger Menu
+dpadRight   = OBDStruct((0x62412C02 ^ dpadBase), False, keyboard.left_key)    # Hamburger Menu
 dpadUp      = OBDStruct((0x62412C10 ^ dpadBase), False, "1")             # Wheel Left
-dpadDown    = OBDStruct((0x62412C08 ^ dpadBase), False, "2")             # Wheel Right   
+dpadDown    = OBDStruct((0x62412C08 ^ dpadBase), False, "2")             # Wheel Right
 
 dpadButtons   = [dpadUp, dpadDown]
 
@@ -202,13 +202,13 @@ key6       = OBDStruct((0x62805100000001 ^ keyBase), False, "6")           # 538
 key7       = OBDStruct((0x62805100000002 ^ keyBase), False, "7")           # Slam!
 key8       = OBDStruct((0x62805100000004 ^ keyBase), False, "8")           # Veronica
 key9       = OBDStruct((0x62805100000008 ^ keyBase), False, "9")           # Radio10
-keyStar    = OBDStruct((0x62805100000010 ^ keyBase), False, "down arrow")  # Esc
-keyHash    = OBDStruct((0x62805100000020 ^ keyBase), False, "up arrow")    # Esc
-keyInfo    = OBDStruct((0x62805140000000 ^ keyBase), False, "left arrow")  # Hamburger Menu
+keyStar    = OBDStruct((0x62805100000010 ^ keyBase), False, keyboard.down_key)  # Esc
+keyHash    = OBDStruct((0x62805100000020 ^ keyBase), False, keyboard.up_key)    # Esc
+keyInfo    = OBDStruct((0x62805140000000 ^ keyBase), False, keyboard.left_key)  # Hamburger Menu
 # keyReject  = OBDStruct((0x62805100040000 ^ keyBase), False, "left arrow")  # Hamburger Menu
 keyNext    = OBDStruct((0x62805100080000 ^ keyBase), False, "n")           # Next
 keyPrev    = OBDStruct((0x62805100020000 ^ keyBase), False, "v")           # Previous
-keyOK      = OBDStruct((0x62805100200000 ^ keyBase), False, "return")      # Enter
+keyOK      = OBDStruct((0x62805100200000 ^ keyBase), False, keyboard.enter_key)      # Enter
 # keyLL      = OBDStruct((0x628051FFFFFFFF ^ keyBase), False, None) # don't logged yet # Map
 # keyLR      = OBDStruct((0x628051FFFFFFFF ^ keyBase), False, "p") # don't logged yet # Phone
 # keyRL      = OBDStruct((0x628051FFFFFFFF ^ keyBase), False, "h") # don't logged yet # Home
