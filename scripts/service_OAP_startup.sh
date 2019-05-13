@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Get audio output
-SINK=$(runuser -l pi -c "pactl list short sources | grep 'alsa_output.usb'")
+SINK=$(runuser -l pi -c "pactl list short sources | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo'")
 SINK=$(echo $SINK | awk '{ print $1 }')
 # Get AUX input
-AUX=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.usb'")
+AUX=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.usb-Burr-Brown'")
 AUX=$(echo $AUX | awk '{ print $1 }')
 # Get DAB input
 DAB=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.platform-soc'")
@@ -25,10 +25,10 @@ sudo /opt/OAP/radio_cli -b D -o 1
 
 # Create virtual sink named Faded
 runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
-# Redirect Virtual sink to audio output sink
-runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
 # Make Faded default
 runuser -l pi -c "pacmd set-default-sink Faded"
+# Redirect Virtual sink to audio output sink
+runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
 # Redirect DAB audio to faded output
 DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 
