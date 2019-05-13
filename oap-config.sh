@@ -197,7 +197,9 @@ function activate_gps() {
 }
 
 function install_raspap() {
-    wget -q https://git.io/voEUQ -O /tmp/raspap && bash /tmp/raspap
+    if [ ! -d "/etc/raspap" ]; then
+        wget -q https://git.io/voEUQ -O /tmp/raspap && bash /tmp/raspap
+    fi
 
     # set SSID, Pass
     sed -i 's/^ssid=.*/ssid=Ford\ Fiësta\ Ruben/' /etc/hostapd/hostapd.conf
