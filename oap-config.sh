@@ -226,6 +226,27 @@ function install_raspap() {
     sh -c "echo '}' >> /etc/wpa_supplicant/wpa_supplicant.conf"
 }
 
+function activate_whatchdog() {
+    # config.txt
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sed -i 's/^# Watchdog.*//' /boot/config.txt
+    sed -i '/dtparam=watchdog=on/d' /boot/config.txt
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sh -c "echo '' >> /boot/config.txt"
+    sh -c "echo '# Watchdog' >> /boot/config.txt"
+    sh -c "echo 'dtparam=watchdog=on' >> /boot/config.txt"
+
+    sudo apt-get install watchdog -y
+    sudo update-rc.d watchdog defaults
+
+    sed -i 's/^#max-load-1 /max-load-1 /' /home/pi/watchdog.conf
+    sed -i 's/^#watchdog-device/watchdog-device/' /home/pi/watchdog.conf
+    
+    sed -i '/watchdog-timeout = 15/d' /home/pi/watchdog.conf
+    sh -c "echo 'watchdog-timeout = 15' >> /home/pi/watchdog.conf"
+    
+}
+
 killall autoapp
 update_system
 rpi_init
@@ -243,4 +264,5 @@ install_rearcam
 install_services
 activate_services
 install_raspap
+activate_whatchdog
 set_permissions
