@@ -241,11 +241,11 @@ function activate_whatchdog() {
     sudo apt-get install watchdog -y
     sudo update-rc.d watchdog defaults
 
-    sed -i 's/^#max-load-1 /max-load-1 /' /home/pi/watchdog.conf
-    sed -i 's/^#watchdog-device/watchdog-device/' /home/pi/watchdog.conf
+    sed -i 's/^#max-load-1 /max-load-1 /' /etc/watchdog.conf
+    sed -i 's/^#watchdog-device/watchdog-device/' /etc/watchdog.conf
     
-    sed -i '/watchdog-timeout = 15/d' /home/pi/watchdog.conf
-    sh -c "echo 'watchdog-timeout = 15' >> /home/pi/watchdog.conf"
+    sed -i '/watchdog-timeout = 15/d' /etc/watchdog.conf
+    sh -c "echo 'watchdog-timeout = 15' >> /etc/watchdog.conf"
     
 }
 
