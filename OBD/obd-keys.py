@@ -35,17 +35,17 @@ class OBDStruct:
             subprocess.Popen(["sudo", "./radio_cli", "-k"]) # Turn off DAB
             subprocess.Popen(["sudo", "./radio_cli", "-b", "D", "-o", "1"]) # Re-enable DAB
         elif(self.button is "1"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "5", "33734", "28"])
-        elif(self.button is "2"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "16", "34824", "28"])
-        elif(self.button is "3"):
             subprocess.Popen(["sudo", "./TuneDAB.sh", "4", "34820", "28"])
+        elif(self.button is "2"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "2", "34818", "28"])
+        elif(self.button is "3"):
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "2", "33283", "33"])
         elif(self.button is "4"):
             subprocess.Popen(["sudo", "./TuneDAB.sh", "10", "33736", "28"])
         elif(self.button is "5"):
             subprocess.Popen(["sudo", "./TuneDAB.sh", "1", "33735", "28"])
         elif(self.button is "6"):
-            subprocess.Popen(["sudo", "./TuneDAB.sh", "2", "34818", "28"])
+            subprocess.Popen(["sudo", "./TuneDAB.sh", "5", "33734", "28"])
         elif(self.button is "7"):
             subprocess.Popen(["sudo", "./TuneDAB.sh", "11", "33445", "28"])
         elif(self.button is "8"):
