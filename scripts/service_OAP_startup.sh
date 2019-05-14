@@ -17,6 +17,9 @@ gpio -g mode 13 up
 # Set day/night output
 gpio -g mode 0 out
 
+# Start watchdog
+sudo /opt/OAP/start_watchdog
+
 # Bootup the DAB radio (and output to I2S)
 sudo /opt/OAP/radio_cli -b D -o 1
 

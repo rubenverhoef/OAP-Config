@@ -114,6 +114,7 @@ function install_services() {
     install -m 755 /boot/OAP-Config/OBD/OBD_startup.sh                          "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/TuneDAB.sh                              "/opt/OAP/"
+    install -m 755 /boot/OAP-Config/scripts/start_watchdog                      "/opt/OAP/"
 }
 
 # Activate services
@@ -240,16 +241,6 @@ function activate_whatchdog() {
     sh -c "echo '' >> /boot/config.txt"
     sh -c "echo '# Watchdog' >> /boot/config.txt"
     sh -c "echo 'dtparam=watchdog=on' >> /boot/config.txt"
-
-    sudo apt-get install watchdog -y
-    sudo update-rc.d watchdog defaults
-
-    sed -i 's/^#max-load-1 /max-load-1 /' /etc/watchdog.conf
-    sed -i 's/^#watchdog-device/watchdog-device/' /etc/watchdog.conf
-    
-    sed -i '/watchdog-timeout = 15/d' /etc/watchdog.conf
-    sh -c "echo 'watchdog-timeout = 15' >> /etc/watchdog.conf"
-    
 }
 
 killall autoapp
