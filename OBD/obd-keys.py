@@ -10,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "pint")) # needed for OB
 from pykeyboard import PyKeyboard # import for emulating keyboard presses
 
 import obd #import for reading/sending obd messages
-from obd import OBDCommand
+from obd import OBDCommand, OBDStatus
 from obd.protocols import ECU
 from obd.utils import bytes_to_int
 import obd.decoders as d
@@ -86,14 +86,18 @@ rev = OBDCommand("Reverse Gear",
                revHeader)
 
 def rev_clb(data):
-    data = bytes_to_int(data.messages[0].data[3:])
-    if(revGear.bitSelect & data):
-        if(revGear.isPressing is False):
-            revGear.isPressing = True
-            revGear.revCamOn()
-    elif(revGear.isPressing is True):
-        revGear.isPressing = False
-        revGear.revCamOff()
+    try:
+        data = bytes_to_int(data.messages[0].data[3:])
+        if(revGear.bitSelect & data):
+            if(revGear.isPressing is False):
+                revGear.isPressing = True
+                revGear.revCamOn()
+        elif(revGear.isPressing is True):
+            revGear.isPressing = False
+            revGear.revCamOff()
+        return
+    except:
+        pass
     return
 
 lightCMD    = b"227151"
@@ -112,14 +116,17 @@ light = OBDCommand("Light status",
                lightHeader)
 
 def light_clb(data):
-    data = bytes_to_int(data.messages[0].data[3:])
-    if(lightBeam.bitSelect & data):
-        if(lightBeam.isPressing is False):
-            lightBeam.isPressing = True
-            lightBeam.ModeNight()
-    elif(lightBeam.isPressing is True):
-        lightBeam.isPressing = False
-        lightBeam.ModeDay()
+    try:
+        data = bytes_to_int(data.messages[0].data[3:])
+        if(lightBeam.bitSelect & data):
+            if(lightBeam.isPressing is False):
+                lightBeam.isPressing = True
+                lightBeam.ModeNight()
+        elif(lightBeam.isPressing is True):
+            lightBeam.isPressing = False
+            lightBeam.ModeDay()
+    except:
+        pass
     return
 
 swCMD     = b"22833C"
@@ -145,15 +152,18 @@ sw = OBDCommand("Steering Wheel",
                swHeader)
 
 def sw_clb(data):
-    data = bytes_to_int(data.messages[0].data[3:])
-    for c, swButton in enumerate(swButtons, 1):
-        if(swButton.bitSelect & data):
-            if(swButton.isPressing is False):
-                swButton.isPressing = True
-                swButton.pressButton()
-        elif(swButton.isPressing is True):
-            swButton.isPressing = False
-            swButton.releaseButton()
+    try:
+        data = bytes_to_int(data.messages[0].data[3:])
+        for c, swButton in enumerate(swButtons, 1):
+            if(swButton.bitSelect & data):
+                if(swButton.isPressing is False):
+                    swButton.isPressing = True
+                    swButton.pressButton()
+            elif(swButton.isPressing is True):
+                swButton.isPressing = False
+                swButton.releaseButton()
+    except:
+        pass
     return
 
 dpadCMD	   = b"22412C"
@@ -177,15 +187,18 @@ dpad = OBDCommand("DPAD",
                dpadHeader)
 
 def dpad_clb(data):
-    data = bytes_to_int(data.messages[0].data[3:])
-    for c, dpadButton in enumerate(dpadButtons, 1):
-        if(dpadButton.bitSelect & data):
-            if(dpadButton.isPressing is False):
-                dpadButton.isPressing = True
-                dpadButton.pressButton()
-        elif(dpadButton.isPressing is True):
-            dpadButton.isPressing = False
-            dpadButton.releaseButton()
+    try:
+        data = bytes_to_int(data.messages[0].data[3:])
+        for c, dpadButton in enumerate(dpadButtons, 1):
+            if(dpadButton.bitSelect & data):
+                if(dpadButton.isPressing is False):
+                    dpadButton.isPressing = True
+                    dpadButton.pressButton()
+            elif(dpadButton.isPressing is True):
+                dpadButton.isPressing = False
+                dpadButton.releaseButton()
+    except:
+        pass
     return
 
 keyCMD     = b"228051"
@@ -236,22 +249,25 @@ key = OBDCommand("Radio Keys",
                keyHeader)
 
 def key_clb(data):
-    data = bytes_to_int(data.messages[0].data[3:])
-    for c, keyButton in enumerate(keyButtons, 1):
-        if(keyButton.bitSelect & data):
-            if(keyButton.isPressing is False):
-                keyButton.isPressing = True
-                keyButton.pressButton()
-        elif(keyButton.isPressing is True):
-            keyButton.isPressing = False
-            keyButton.releaseButton()
-    for c, keyButton in enumerate(DABButtons, 1):
-        if(keyButton.bitSelect & data):
-            if(keyButton.isPressing is False):
-                keyButton.isPressing = True
-                keyButton.TuneDAB()
-        elif(keyButton.isPressing is True):
-            keyButton.isPressing = False
+    try:
+        data = bytes_to_int(data.messages[0].data[3:])
+        for c, keyButton in enumerate(keyButtons, 1):
+            if(keyButton.bitSelect & data):
+                if(keyButton.isPressing is False):
+                    keyButton.isPressing = True
+                    keyButton.pressButton()
+            elif(keyButton.isPressing is True):
+                keyButton.isPressing = False
+                keyButton.releaseButton()
+        for c, keyButton in enumerate(DABButtons, 1):
+            if(keyButton.bitSelect & data):
+                if(keyButton.isPressing is False):
+                    keyButton.isPressing = True
+                    keyButton.TuneDAB()
+            elif(keyButton.isPressing is True):
+                keyButton.isPressing = False
+    except:
+        pass
     return
 
 #obd.logger.setLevel(obd.logging.DEBUG)
@@ -265,9 +281,31 @@ connection.supported_commands.add(dpad)
 connection.supported_commands.add(key)
 
 while(True):
-    rev_clb(connection.query(rev))
-    light_clb(connection.query(light))
-    for x in range(10):
-        sw_clb(connection.query(sw))
-        dpad_clb(connection.query(dpad))
-        key_clb(connection.query(key))
+    time.sleep(1)
+    print("Waiting for connection")
+    while(connection.status() == OBDStatus.CAR_CONNECTED):
+        try:
+            rev_clb(connection.query(rev))
+        except:
+            pass
+
+        try:
+            light_clb(connection.query(light))
+        except:
+            pass
+
+        for x in range(10):
+            try:
+                sw_clb(connection.query(sw))
+            except:
+                pass
+
+            try:
+                dpad_clb(connection.query(dpad))
+            except:
+                pass
+
+            try:
+                key_clb(connection.query(key))
+            except:
+                pass
