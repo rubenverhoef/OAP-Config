@@ -55,6 +55,7 @@ do
         if [ $IGNITION_GPIO -ne 0 ]; then
             let "IGNITION_CNT++"
             if [ $IGNITION_CNT -gt 10 ]; then
+                sudo killall start_watchdog
                 sudo shutdown -h now
             fi
         else
