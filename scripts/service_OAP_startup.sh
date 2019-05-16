@@ -33,6 +33,7 @@ runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$S
 DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 
 # Some variables
+TIME_SET_TRY=0
 IGNITION_CNT=0
 TIME_SET=0
 AUX_STATE=0
@@ -97,12 +98,15 @@ do
 
     # Set time from DAB radio
     if [ $TIME_SET -ne 1 ]; then
-        TIME=$(sudo /opt/OAP/radio_cli -t | grep T.*Z | sed 's/T/ /; s/Z/ /')
-        YEAR=$(echo $TIME | awk '{ print $1 }' | sed 's/-.*//')
+        if [ $TIME_SET_TRY -lt 100 ]; then
+            let "TIME_SET_TRY++"
+            TIME=$(sudo /opt/OAP/radio_cli -t | grep T.*Z | sed 's/T/ /; s/Z/ /')
+            YEAR=$(echo $TIME | awk '{ print $1 }' | sed 's/-.*//')
 
-        if [ -n "$TIME" ] && [ "$YEAR" -gt "0" ]; then
-            TIME_SET=1
-            sudo date -s "$TIME" --utc
+            if [ -n "$TIME" ] && [ "$YEAR" -gt "0" ]; then
+                TIME_SET=1
+                sudo date -s "$TIME" --utc
+            fi
         fi
     fi
 done
