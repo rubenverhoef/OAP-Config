@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=OAP
-Exec=/usr/local/bin/openauto
+Exec=bash /opt/OAP/OAP_startup.sh
 Terminal=false
 Type=Application
 Icon=/home/pi/icons/openauto.png
