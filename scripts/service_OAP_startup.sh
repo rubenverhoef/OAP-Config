@@ -40,12 +40,16 @@ sudo /opt/OAP/start_watchdog &
 # Bootup the DAB radio (and output to I2S)
 sudo /opt/OAP/radio_cli -b D -o 1
 
-# Create virtual sink named Faded
+# Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC)
 runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
-# Make Faded default
-runuser -l pi -c "pacmd set-default-sink Faded"
-# Redirect Virtual sink to audio output sink
+# Create virtual sink named Voice for all AA voices
+runuser -l pi -c "pactl load-module module-null-sink sink_name=Voice sink_properties=device.description='Voice_Sink'"
+# Make Voice default (so we can change the volume from OAP)
+runuser -l pi -c "pacmd set-default-sink Voice"
+# Redirect Faded to audio output sink
 runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
+# Redirect Voice to audio output sink
+runuser -l pi -c "pactl load-module module-loopback source=Voice.monitor sink=$SINK"
 # Redirect DAB audio to faded output
 DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 
@@ -85,8 +89,8 @@ do
         FIRST_INPUT=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '1p')
         SECOND_INPUT=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '2p')
         AA_MUSIC=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "front"  | awk '{ print $1 }')
-        runuser -l pi -c "pacmd move-sink-input $FIRST_INPUT $SINK"
-        runuser -l pi -c "pacmd move-sink-input $SECOND_INPUT $SINK"
+        runuser -l pi -c "pacmd move-sink-input $FIRST_INPUT Voice"
+        runuser -l pi -c "pacmd move-sink-input $SECOND_INPUT Voice"
         runuser -l pi -c "pacmd move-sink-input $AA_MUSIC Faded"
     fi
     # AUX redirect trigger
