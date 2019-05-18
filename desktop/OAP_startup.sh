@@ -7,3 +7,5 @@ if [ -z "$RUNNING" ]; then
 else
     xdotool key F12
 fi
+
+exit 0

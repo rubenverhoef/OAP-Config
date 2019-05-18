@@ -58,6 +58,7 @@ do
             if [ $IGNITION_CNT -gt 10 ]; then
                 sudo killall start_watchdog
                 sudo shutdown -h now
+                exit 0
             fi
         else
             IGNITION_CNT=0
@@ -111,4 +112,4 @@ do
     fi
 done
 
-exit 0
+exit 1
