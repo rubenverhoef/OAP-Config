@@ -10,6 +10,23 @@ AUX=$(echo $AUX | awk '{ print $1 }')
 DAB=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.platform-soc'")
 DAB=$(echo $DAB | awk '{ print $1 }')
 
+# Check all audio variables
+if [ -z "$SINK" ] || [ -z "$AUX" ] || [ -z "$DAB" ]; then
+    if [ ! -f "/home/pi/audio_error.sh" ]; then
+        echo "SINK="$SINK > /home/pi/audio_error.sh
+        echo "AUX="$AUX >> /home/pi/audio_error.sh
+        echo "DAB="$DAB >> /home/pi/audio_error.sh  
+        sudo /opt/OAP/reboot.sh
+        exit 1
+    else
+        echo "SINK="$SINK > /home/pi/fatal_audio_error.sh
+        echo "AUX="$AUX >> /home/pi/fatal_audio_error.sh
+        echo "DAB="$DAB >> /home/pi/fatal_audio_error.sh  
+    fi
+else
+    rm -f /home/pi/audio_error.sh
+fi
+
 # Set backlight pin to PWM
 gpio -g mode 12 pwm
 # Enable pullup of Ignition pin
