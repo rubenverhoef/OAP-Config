@@ -234,7 +234,7 @@ function install_raspap() {
     sh -c "echo '}' >> /etc/wpa_supplicant/wpa_supplicant.conf"
 }
 
-function activate_whatchdog() {
+function activate_watchdog() {
     # config.txt
     sed -i '/./,/^$/!d' /boot/config.txt
     sed -i 's/^# Watchdog.*//' /boot/config.txt
@@ -262,5 +262,5 @@ install_rearcam
 install_services
 activate_services
 install_raspap
-activate_whatchdog
+activate_watchdog
 set_permissions
