@@ -222,9 +222,10 @@ function install_raspap() {
     # config OnePlus 3T hotspot to get internet on the RPI
     sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
     sed -i 's/^network=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^    ssid=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^    psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^    key_mgmt=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^[[:space:]]*ssid=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^[[:space:]]*psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^[[:space:]]*#psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+    sed -i 's/^[[:space:]]*key_mgmt=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
     sed -i 's/^}*//' /etc/wpa_supplicant/wpa_supplicant.conf
     sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
     sh -c "echo 'network={' >> /etc/wpa_supplicant/wpa_supplicant.conf"
