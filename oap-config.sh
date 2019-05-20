@@ -210,6 +210,9 @@ function install_raspap() {
     # set SSID, Pass
     sed -i 's/^ssid=.*/ssid=Ford\ Fiësta\ Ruben/' /etc/hostapd/hostapd.conf
     sed -i 's/^wpa_passphrase=.*/wpa_passphrase=FordFeestRuben/' /etc/hostapd/hostapd.conf
+    sed -i 's/^#ieee80211n/ieee80211n/' /etc/hostapd/hostapd.conf
+    sed -i 's/^#wmm_enabled/wmm_enabled/' /etc/hostapd/hostapd.conf
+    sed -i 's/^#ht_capab/ht_capab/' /etc/hostapd/hostapd.conf
 
     # set static ip for android phones
     sed -i '/./,/^$/!d' /etc/dnsmasq.conf

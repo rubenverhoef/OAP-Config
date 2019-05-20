@@ -32,7 +32,9 @@ class OBDStruct:
     def TuneDAB(self):
         os.chdir("/opt/OAP/")
         if(self.button is "0"):
+            subprocess.Popen(["killall", "radio_cli"])
             subprocess.Popen(["sudo", "./radio_cli", "-k"]) # Turn off DAB
+            subprocess.Popen(["killall", "radio_cli"])
             subprocess.Popen(["sudo", "./radio_cli", "-b", "D", "-o", "1"]) # Re-enable DAB
         elif(self.button is "1"):
             subprocess.Popen(["sudo", "./TuneDAB.sh", "4", "34820", "28"])

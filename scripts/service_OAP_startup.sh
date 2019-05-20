@@ -38,6 +38,7 @@ gpio -g mode 0 out
 sudo /opt/OAP/start_watchdog &
 
 # Bootup the DAB radio (and output to I2S)
+sudo killall radio_cli
 sudo /opt/OAP/radio_cli -b D -o 1
 
 # Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC)
