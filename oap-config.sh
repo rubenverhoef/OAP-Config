@@ -228,8 +228,8 @@ function install_raspap() {
     sed -i 's/^}*//' /etc/wpa_supplicant/wpa_supplicant.conf
     sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
     sh -c "echo 'network={' >> /etc/wpa_supplicant/wpa_supplicant.conf"
-    sh -c "echo '    ssid="OnePlus\ 3T\ Ruben"' >> /etc/wpa_supplicant/wpa_supplicant.conf"
-    sh -c "echo '    psk="1\+3TRuben"' >> /etc/wpa_supplicant/wpa_supplicant.conf" # Not secret
+    sh -c "echo '    ssid=\"OnePlus 3T Ruben\"' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+    sh -c "echo '    psk=\"1+3TRuben\"' >> /etc/wpa_supplicant/wpa_supplicant.conf" # Not secret
     sh -c "echo '    key_mgmt=WPA-PSK' >> /etc/wpa_supplicant/wpa_supplicant.conf"
     sh -c "echo '}' >> /etc/wpa_supplicant/wpa_supplicant.conf"
 }
