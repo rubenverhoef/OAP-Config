@@ -126,17 +126,6 @@ function activate_services() {
     sh -c "echo '@bash /opt/OAP/OBD_startup.sh' >> /home/pi/.config/lxsession/LXDE-pi/autostart"
 }
 
-# Shutdown functions
-function relay_config() {
-    sed -i '/./,/^$/!d' /boot/config.txt
-    sed -i 's/^dtoverlay=gpio-poweroff.*//' /boot/config.txt
-    sed -i 's/^# GPIO triggerd poweroff.*//' /boot/config.txt
-    sed -i '/./,/^$/!d' /boot/config.txt
-    sh -c "echo '' >> /boot/config.txt"
-    sh -c "echo '# GPIO triggerd poweroff' >> /boot/config.txt"
-    sh -c "echo 'dtoverlay=gpio-poweroff,gpiopin=5,active_low="y"' >> /boot/config.txt"
-}
-
 # Power settings
 function power_config() {
     sed -i '/./,/^$/!d' /boot/config.txt
@@ -254,7 +243,6 @@ update_system
 rpi_init
 remove_ssh_message
 hide_taskbar
-relay_config
 power_config
 activate_dab
 activate_rtc

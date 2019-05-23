@@ -34,6 +34,9 @@ gpio -g mode 13 up
 
 # Start watchdog
 sudo /opt/OAP/start_watchdog &
+# Output high on relay pin
+gpio -g mode 5 out
+gpio -g write 5 1
 
 # Bootup the DAB radio (and output to I2S)
 sudo killall radio_cli
