@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Feed the dog
+sudo /opt/OAP/wd_feed
+
 # Get audio output
 SINK=$(runuser -l pi -c "pactl list short sources | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo'")
 SINK=$(echo $SINK | awk '{ print $1 }')
@@ -31,9 +34,6 @@ fi
 gpio -g mode 12 pwm
 # Enable pullup of Ignition pin
 gpio -g mode 13 up
-
-# Start watchdog
-sudo /opt/OAP/start_watchdog &
 # Output high on relay pin
 gpio -g mode 5 out
 gpio -g write 5 1
@@ -68,6 +68,9 @@ OLD_VOLUME=100%
 # Main loop for: (checking inputs, )
 for (( ; ; ))
 do
+    # Feed the dog
+    sudo /opt/OAP/wd_feed
+    
     # Shutdown trigger
     AA_RUNNING=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | awk '{ print $1 }')
     AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
@@ -79,7 +82,6 @@ do
         if [ $IGNITION_GPIO -ne 0 ]; then
             let "IGNITION_CNT++"
             if [ $IGNITION_CNT -gt 10 ]; then
-                sudo killall start_watchdog
                 sudo shutdown -h now
                 exit 0
             fi
