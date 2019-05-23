@@ -16,13 +16,13 @@ DAB=$(echo $DAB | awk '{ print $1 }')
 # Check all audio variables
 if [ -z "$SINK" ] || [ -z "$AUX" ] || [ -z "$DAB" ]; then
     if [ ! -f "/home/pi/audio_error.sh" ]; then
-        echo "SINK="$SINK > /home/pi/audio_error.sh
+        echo "SINK="$SINK >> /home/pi/audio_error.sh
         echo "AUX="$AUX >> /home/pi/audio_error.sh
         echo "DAB="$DAB >> /home/pi/audio_error.sh  
-        sudo /opt/OAP/reboot.sh
+        sudo reboot
         exit 1
     else
-        echo "SINK="$SINK > /home/pi/fatal_audio_error.sh
+        echo "SINK="$SINK >> /home/pi/fatal_audio_error.sh
         echo "AUX="$AUX >> /home/pi/fatal_audio_error.sh
         echo "DAB="$DAB >> /home/pi/fatal_audio_error.sh  
     fi
