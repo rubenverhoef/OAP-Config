@@ -43,17 +43,30 @@ sudo killall radio_cli
 sudo /opt/OAP/radio_cli -b D -o 1
 
 # Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC)
-runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
+if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Faded")" ]; then
+    echo "Creating Faded sink"
+    runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
+fi
 # Create virtual sink named Voice for all AA voices
-runuser -l pi -c "pactl load-module module-null-sink sink_name=Voice sink_properties=device.description='Voice_Sink'"
+if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Voice")" ]; then
+    echo "Creating Voice sink"
+    runuser -l pi -c "pactl load-module module-null-sink sink_name=Voice sink_properties=device.description='Voice_Sink'"
+fi
 # Make Voice default (so we can change the volume from OAP)
 runuser -l pi -c "pacmd set-default-sink Voice"
 # Redirect Faded to audio output sink
-runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
+if [ $(runuser -l pi -c "pacmd list-sink-inputs" | grep "Faded") ]; then
+    runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
+fi
 # Redirect Voice to audio output sink
-runuser -l pi -c "pactl load-module module-loopback source=Voice.monitor sink=$SINK"
+if [ $(runuser -l pi -c "pacmd list-sink-inputs" | grep "Voice") ]; then
+    runuser -l pi -c "pactl load-module module-loopback source=Voice.monitor sink=$SINK"
+fi
 # Redirect DAB audio to faded output
-DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
+DAB_MOD=$(runuser -l pi -c "pacmd list-sink-inputs" | grep "alsa_input.platform-soc")
+if [ -z "$DAB_MOD" ]; then
+    DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
+fi
 
 # Some variables
 TIME_SET_TRY=0
