@@ -31,8 +31,6 @@ fi
 gpio -g mode 12 pwm
 # Enable pullup of Ignition pin
 gpio -g mode 13 up
-# Set day/night output
-gpio -g mode 0 out
 
 # Start watchdog
 sudo /opt/OAP/start_watchdog &
