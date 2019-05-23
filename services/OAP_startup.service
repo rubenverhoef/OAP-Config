@@ -4,7 +4,7 @@
 [Service]
  Type=simple
  ExecStart=/opt/OAP/service_OAP_startup.sh
- RemainAfterExit=yes
+ RemainAfterExit=no
  Restart=always
  RestartSec=3
  
