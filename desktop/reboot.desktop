@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Reboot
-Exec=sudo /opt/OAP/reboot.sh
+Exec=sudo reboot
 Terminal=false
 Type=Application
 Icon=/home/pi/icons/reboot.png
