@@ -1,0 +1,11 @@
+[Unit]
+ Description=Dog starter
+ Before=sysinit.target systemd-modules-load.service
+ DefaultDependencies=no
+
+[Service]
+ Type=oneshot
+ ExecStart=/opt/OAP/wd_start
+
+[Install]
+ WantedBy=sysinit.target
