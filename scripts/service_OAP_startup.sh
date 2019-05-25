@@ -55,16 +55,19 @@ fi
 # Make Voice default (so we can change the volume from OAP)
 runuser -l pi -c "pacmd set-default-sink Voice"
 # Redirect Faded to audio output sink
-if [ $(runuser -l pi -c "pacmd list-sink-inputs" | grep "Faded") ]; then
+if [ -z "$(runuser -l pi -c "pacmd list-sink-inputs" | grep "Faded")" ]; then
+    echo "Redirecting Faded to Sink"
     runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
 fi
 # Redirect Voice to audio output sink
-if [ $(runuser -l pi -c "pacmd list-sink-inputs" | grep "Voice") ]; then
+if [ -z "$(runuser -l pi -c "pacmd list-sink-inputs" | grep "Voice")" ]; then
+    echo "Redirecting Voice to Sink"
     runuser -l pi -c "pactl load-module module-loopback source=Voice.monitor sink=$SINK"
 fi
 # Redirect DAB audio to faded output
 DAB_MOD=$(runuser -l pi -c "pacmd list-sink-inputs" | grep "alsa_input.platform-soc")
 if [ -z "$DAB_MOD" ]; then
+    echo "Redirecting DAB to Sink"
     DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 fi
 
