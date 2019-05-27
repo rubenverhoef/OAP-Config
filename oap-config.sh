@@ -115,8 +115,6 @@ function install_services() {
     install -m 755 /boot/OAP-Config/OBD/OBD_startup.sh                          "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/TuneDAB.sh                              "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/wd_feed                             "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/wd_start                            "/opt/OAP/"
     install -m 755 /boot/OAP-Config/desktop/OAP_startup.sh                      "/opt/OAP/"
 }
 

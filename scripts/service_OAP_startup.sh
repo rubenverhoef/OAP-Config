@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Feed the dog
-sudo /opt/OAP/wd_feed
+sudo touch /dev/watchdog
 
 # Get audio output
 SINK=$(runuser -l pi -c "pactl list short sources | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo'")
@@ -20,7 +20,7 @@ if [ -z "$SINK" ] || [ -z "$AUX" ] || [ -z "$DAB" ]; then
         echo "AUX="$AUX >> /home/pi/audio_error.sh
         echo "DAB="$DAB >> /home/pi/audio_error.sh  
         sudo reboot
-        exit 1
+        exit 0
     else
         echo "SINK="$SINK >> /home/pi/fatal_audio_error.sh
         echo "AUX="$AUX >> /home/pi/fatal_audio_error.sh
@@ -34,9 +34,6 @@ fi
 gpio -g mode 12 pwm
 # Enable pullup of Ignition pin
 gpio -g mode 13 up
-# Output high on relay pin
-gpio -g mode 5 out
-gpio -g write 5 1
 
 # Bootup the DAB radio (and output to I2S)
 sudo killall radio_cli
@@ -85,7 +82,7 @@ OLD_VOLUME=100%
 for (( ; ; ))
 do
     # Feed the dog
-    sudo /opt/OAP/wd_feed
+    sudo touch /dev/watchdog
     
     # Shutdown trigger
     AA_RUNNING=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | awk '{ print $1 }')

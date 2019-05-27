@@ -5,8 +5,7 @@
  Type=simple
  ExecStart=/opt/OAP/service_OAP_startup.sh
  RemainAfterExit=no
- Restart=always
- RestartSec=3
+ Restart=on-failure
  
 [Install]
  WantedBy=multi-user.target
