@@ -241,6 +241,17 @@ function activate_watchdog() {
     sh -c "echo 'dtparam=watchdog=on' >> /boot/config.txt"
 }
 
+function activate_ds18b20() {
+    # config.txt
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sed -i 's/^# DS18B20 Temperature Sensor.*//' /boot/config.txt
+    sed -i '/dtoverlay=w1-gpio/d' /boot/config.txt
+    sed -i '/./,/^$/!d' /boot/config.txt
+    sh -c "echo '' >> /boot/config.txt"
+    sh -c "echo '# DS18B20 Temperature Sensor' >> /boot/config.txt"
+    sh -c "echo 'dtoverlay=w1-gpio' >> /boot/config.txt"
+}
+
 killall autoapp
 update_system
 rpi_init
@@ -258,4 +269,5 @@ install_services
 activate_services
 install_raspap
 activate_watchdog
+activate_ds18b20
 set_permissions
