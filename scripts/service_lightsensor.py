@@ -13,11 +13,12 @@ BUS = 1
 TSL2561_ADDR = 0x39
 daynight_gpio = 0
 pwm_gpio = 12
-TSL2561_CHECK_INTERVAL=0.1
+TSL2561_CHECK_INTERVAL=1
+PWM_MAX=1023
 LUX_DARK_BR=50
 LUX_FULL_BR=200
 LUX_DAY=100
-PWM_MAX=1023
+LUX_NIGHT=50
 # ---------------------------------
 
 i2cBus = smbus.SMBus(BUS)
@@ -30,9 +31,12 @@ lastvalue = 0
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(daynight_gpio, GPIO.OUT)
+GPIO.output(0, GPIO.LOW)
 os.system("gpio -g mode " + str(pwm_gpio) + " pwm")
 a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
 b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
+
+Lux_Array = [100, 100, 100, 100, 100]
 
 try:
   while True:
@@ -59,7 +63,6 @@ try:
     # Calc factor Infrared/Ambient
     Ratio = 0
     Lux = 0
-    step = 0
     if Ambient != 0:
       Ratio = float(Infrared)/float(Ambient)
       #print ("Ratio: {}".format(Ratio))
@@ -77,23 +80,29 @@ try:
       else:
         Lux = 0
       Luxrounded=round(Lux,0)
-      if lastvalue != Luxrounded:
-        #print ("Lux = {}\n".format(Luxrounded))
-        os.system("echo {} > /tmp/tsl2561".format(Luxrounded))
-        lastvalue = Luxrounded
 
-        Level=int(round(a*Luxrounded+b,0))
-        if Level < 0:
-          Level=0
-        elif Level > PWM_MAX:
-          Level=PWM_MAX
+      # os.system("echo {} > /tmp/tsl2561".format(Luxrounded))
+      Lux_Array.append(Luxrounded)
+      Lux_Array.pop(0)
+      total=0
+      for x in Lux_Array:
+        total=total+x
+      avarage=total/5
 
-        if Luxrounded > LUX_DAY:
-          GPIO.output(0, GPIO.LOW)
-        else:
-          GPIO.output(0, GPIO.HIGH)
-        os.system("gpio -g pwm " + str(pwm_gpio) + " " + str(Level))
-        print("Lux = {} | ".format(Luxrounded) + "Level = {}".format(Level))
+      Level=int(round(a*avarage+b,0))
+      if Level < 0:
+        Level=0
+      elif Level > PWM_MAX:
+        Level=PWM_MAX
+
+      if avarage > LUX_DAY:
+        GPIO.output(0, GPIO.LOW)
+      elif avarage < LUX_NIGHT:
+        GPIO.output(0, GPIO.HIGH)
+
+      os.system("gpio -g pwm " + str(pwm_gpio) + " " + str(Level))
+
+      # print("Lux = {} | ".format(avarage) + "Level = {}".format(Level))
 
     sleep (TSL2561_CHECK_INTERVAL)
 except KeyboardInterrupt:

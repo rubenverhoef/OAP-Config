@@ -107,10 +107,12 @@ function install_rearcam() {
 
 # Install services
 function install_services() {
-    install -m 644 /boot/OAP-Config/services/OAP_startup.service               "/etc/systemd/system/"
-    install -m 644 /boot/OAP-Config/services/WD_start.service               "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/OAP_startup.service                "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/WD_start.service                   "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/lightsensor.service                "/etc/systemd/system/"
 
     install -d "/opt/OAP"
+    install -m 755 /boot/OAP-Config/scripts/service_lightsensor.py              "/opt/OAP/"
     install -m 755 /boot/OAP-Config/scripts/service_OAP_startup.sh              "/opt/OAP/"
     install -m 755 /boot/OAP-Config/OBD/OBD_startup.sh                          "/opt/OAP/"
     install -m 755 /boot/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
@@ -122,6 +124,7 @@ function install_services() {
 function activate_services() {
     systemctl enable OAP_startup.service
     systemctl enable WD_start.service
+    systemctl enable lightsensor.service
     sed -i '/@bash \/opt\/OAP\/OBD_startup.sh/d' /home/pi/.config/lxsession/LXDE-pi/autostart
     sh -c "echo '@bash /opt/OAP/OBD_startup.sh' >> /home/pi/.config/lxsession/LXDE-pi/autostart"
 }

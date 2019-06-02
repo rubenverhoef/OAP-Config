@@ -1,0 +1,14 @@
+[Unit]
+ Description=Pi Lightsensor Service
+
+[Service]
+ Type=simple
+ ExecStart=/usr/bin/python3 /opt/OAP/service_lightsensor.py
+ Restart=on-failure
+ StartLimitInterval=60
+ RestartSec=5
+ StartLimitBurst=3
+
+[Install]
+ WantedBy=multi-user.target
+ 
