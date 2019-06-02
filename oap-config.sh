@@ -168,7 +168,7 @@ function activate_i2c() {
     sed -i '/./,/^$/!d' /boot/config.txt
     sh -c "echo '' >> /boot/config.txt"
     sh -c "echo '# I2C Bus' >> /boot/config.txt"
-    sh -c "echo 'dtoverlay=i2c_arm=on' >> /boot/config.txt"
+    sh -c "echo 'dtparam=i2c=on' >> /boot/config.txt"
 }
 
 function set_permissions() {
