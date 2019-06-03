@@ -17,7 +17,7 @@ import obd.decoders as d
 
 keyboard = PyKeyboard()
 # Set day/night output
-subprocess.Popen(["gpio", "-g", "mode", "0", "out"])
+# subprocess.Popen(["gpio", "-g", "mode", "0", "out"])
 
 class OBDStruct:
     def __init__(self, bitSelect, isPressing, button):
@@ -104,34 +104,34 @@ def rev_clb(data):
         pass
     return
 
-lightCMD    = b"227151"
-lightHeader = b'000726'
-lightBytes  = 2
-lightBase   = 0x6271510000
-lightBeam   = OBDStruct((0x6271510008 ^ lightBase), False, None)
+# lightCMD    = b"227151"
+# lightHeader = b'000726'
+# lightBytes  = 2
+# lightBase   = 0x6271510000
+# lightBeam   = OBDStruct((0x6271510008 ^ lightBase), False, None)
 
-light = OBDCommand("Light status",
-               "Decode Light status Command",
-               lightCMD,
-               (3 + lightBytes),
-               d.drop,
-               ECU.ALL,
-               True,
-               lightHeader)
+# light = OBDCommand("Light status",
+#                "Decode Light status Command",
+#                lightCMD,
+#                (3 + lightBytes),
+#                d.drop,
+#                ECU.ALL,
+#                True,
+#                lightHeader)
 
-def light_clb(data):
-    try:
-        data = bytes_to_int(data.messages[0].data[3:])
-        if(lightBeam.bitSelect & data):
-            if(lightBeam.isPressing is False):
-                lightBeam.isPressing = True
-                lightBeam.ModeNight()
-        elif(lightBeam.isPressing is True):
-            lightBeam.isPressing = False
-            lightBeam.ModeDay()
-    except:
-        pass
-    return
+# def light_clb(data):
+#     try:
+#         data = bytes_to_int(data.messages[0].data[3:])
+#         if(lightBeam.bitSelect & data):
+#             if(lightBeam.isPressing is False):
+#                 lightBeam.isPressing = True
+#                 lightBeam.ModeNight()
+#         elif(lightBeam.isPressing is True):
+#             lightBeam.isPressing = False
+#             lightBeam.ModeDay()
+#     except:
+#         pass
+#     return
 
 swCMD     = b"22833C"
 swHeader  = b'0007A5'
@@ -293,12 +293,7 @@ while(True):
         except:
             pass
 
-        try:
-            light_clb(connection.query(light))
-        except:
-            pass
-
-        for x in range(10):
+        for x in range(5):
             try:
                 sw_clb(connection.query(sw))
             except:
