@@ -279,7 +279,7 @@ def key_clb(data):
 connection = obd.OBD("/dev/ttyUSB0", protocol = "B")
 
 connection.supported_commands.add(rev)
-connection.supported_commands.add(light)
+# connection.supported_commands.add(light)
 connection.supported_commands.add(sw)
 connection.supported_commands.add(dpad)
 connection.supported_commands.add(key)
