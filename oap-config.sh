@@ -217,7 +217,7 @@ function install_raspap() {
     sed -i 's/^dhcp-host=.*//' /etc/dnsmasq.conf
     sed -i '/./,/^$/!d' /etc/dnsmasq.conf
     sh -c "echo 'dhcp-host=c0:ee:fb:e5:9f:d2,10.3.141.10' >> /etc/dnsmasq.conf" # OnePlus 3T Ruben
-    sh -c "echo 'dhcp-host=50:55:27:ab:f4:1e,10.3.141.11' >> /etc/dnsmasq.conf" # Nexus 5X Anne
+    sh -c "echo 'dhcp-host=98:09:CF:68:40:77,10.3.141.11' >> /etc/dnsmasq.conf" # OnePlus 7  Anne
 }
 
 function phone_hotspot_config() {
