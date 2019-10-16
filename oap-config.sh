@@ -168,12 +168,12 @@ function activate_rtc() {
 
 function activate_i2c() {
     sed -i '/./,/^$/!d' /boot/config.txt
-    sed -i '/dtoverlay=i2c_arm=/d' /boot/config.txt
+    sed -i '/dtparam=i2c_arm=/d' /boot/config.txt
     sed -i 's/^# I2C Bus.*//' /boot/config.txt
     sed -i '/./,/^$/!d' /boot/config.txt
     sh -c "echo '' >> /boot/config.txt"
     sh -c "echo '# I2C Bus' >> /boot/config.txt"
-    sh -c "echo 'dtparam=i2c=on' >> /boot/config.txt"
+    sh -c "echo 'dtparam=i2c_arm=on' >> /boot/config.txt"
 }
 
 function set_permissions() {
@@ -194,9 +194,9 @@ function activate_gps() {
     sh -c "echo 'enable_uart=1' >> /boot/config.txt"
 
     # GPSD, use UART
-    sed -i 's/^USBAUTO="true"/USBAUTO="false"/' /etc/default/gpsd
-    sed -i 's/^DEVICES=""/DEVICES="\/dev\/serial0"/' /etc/default/gpsd
-    sed -i 's/^GPSD_OPTIONS=""/GPSD_OPTIONS="-n"/' /etc/default/gpsd
+    sed -i 's/^USBAUTO=.*/USBAUTO="false"/' /etc/default/gpsd
+    sed -i 's/^DEVICES=.*/DEVICES="\/dev\/serial0"/' /etc/default/gpsd
+    sed -i 's/^GPSD_OPTIONS=.*/GPSD_OPTIONS="-n"/' /etc/default/gpsd
 }
 
 function install_raspap() {
