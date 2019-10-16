@@ -218,7 +218,9 @@ function install_raspap() {
     sed -i '/./,/^$/!d' /etc/dnsmasq.conf
     sh -c "echo 'dhcp-host=c0:ee:fb:e5:9f:d2,10.3.141.10' >> /etc/dnsmasq.conf" # OnePlus 3T Ruben
     sh -c "echo 'dhcp-host=50:55:27:ab:f4:1e,10.3.141.11' >> /etc/dnsmasq.conf" # Nexus 5X Anne
+}
 
+function phone_hotspot_config() {
     # config OnePlus 3T hotspot to get internet on the RPI
     sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
     sed -i 's/^network=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
@@ -275,5 +277,6 @@ install_services
 activate_services
 install_raspap
 activate_watchdog
+phone_hotspot_config
 activate_ds18b20
 set_permissions
