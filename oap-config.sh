@@ -61,8 +61,13 @@ function rpi_init() {
 # Set Wallpaper
 function set_wallpaper() {
     install -m 644 /boot/OAP-Config/desktop/wallpaper.png   "/home/pi"
-    install -m 644 /boot/OAP-Config/desktop/wallpaper.png   "/usr/share/plymouth/themes/pix/splash.png"
     sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
+}
+
+# Set Splash boot screen
+function set_splash() {
+    install -m 644 /boot/OAP-Config/desktop/splash1.h264   "/usr/share/openautopro"
+    install -m 644 /boot/OAP-Config/desktop/splash2.h264   "/usr/share/openautopro"
 }
 
 # Remove unwanted OAP apps
@@ -262,6 +267,7 @@ activate_dab
 activate_rtc
 activate_gps
 set_wallpaper
+set_splash
 set_icons
 config_oap
 install_rearcam
