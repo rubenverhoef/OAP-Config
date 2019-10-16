@@ -145,6 +145,12 @@ function power_config() {
     sh -c "echo 'max_usb_current=1' >> /boot/config.txt"
 }
 
+# Update wiring pi (RPI4 needs 2.52)
+function update_wiringpi() {
+    wget -q https://project-downloads.drogon.net/wiringpi-latest.deb -O /tmp/wiringpi.deb
+    sudo dpkg -i /tmp/wiringpi.deb
+}
+
 # uGreen DABBoard
 function activate_dab() {
     sed -i '/./,/^$/!d' /boot/config.txt
@@ -265,6 +271,7 @@ rpi_init
 remove_ssh_message
 hide_taskbar
 power_config
+update_wiringpi
 activate_dab
 activate_rtc
 activate_gps
