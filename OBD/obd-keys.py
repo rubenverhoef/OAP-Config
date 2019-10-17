@@ -16,8 +16,8 @@ from obd.utils import bytes_to_int
 import obd.decoders as d
 
 keyboard = PyKeyboard()
-# Set day/night output
-# subprocess.Popen(["gpio", "-g", "mode", "0", "out"])
+# Set reverse output
+subprocess.Popen(["gpio", "-g", "mode", "17", "out"])
 
 class OBDStruct:
     def __init__(self, bitSelect, isPressing, button):
@@ -58,14 +58,11 @@ class OBDStruct:
             subprocess.Popen(["sudo", "./TuneDAB.sh", "17", "33746", "28"])
             
     def revCamOn(self):
-        keyboard.tap_key(keyboard.function_keys[6])
-        os.chdir("/opt/OAP/cam_overlay/")
-        subprocess.Popen(["./cam_overlay.bin", "-s", "-d", "/dev/v4l/by-id/usb-fushicai_usbtv007_300000000002-video-index0"])
+        subprocess.Popen(["gpio", "-g", "write", "17", "1"])
 
     def revCamOff(self):
-        keyboard.tap_key(keyboard.function_keys[6])
-        subprocess.Popen(["killall", "cam_overlay.bin"])
-    
+        subprocess.Popen(["gpio", "-g", "write", "17", "0"])
+
     def ModeNight(self):
         subprocess.Popen(["gpio", "-g", "write", "0", "1"])
         subprocess.Popen(["gpio", "-g", "pwm", "12", "800"])
