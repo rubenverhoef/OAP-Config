@@ -64,11 +64,11 @@ class OBDStruct:
         subprocess.Popen(["gpio", "-g", "write", "17", "0"])
 
     def ModeNight(self):
-        subprocess.Popen(["gpio", "-g", "write", "0", "1"])
+        subprocess.Popen(["gpio", "-g", "write", "1", "1"])
         subprocess.Popen(["gpio", "-g", "pwm", "12", "800"])
 
     def ModeDay(self):
-        subprocess.Popen(["gpio", "-g", "write", "0", "0"])
+        subprocess.Popen(["gpio", "-g", "write", "1", "0"])
         subprocess.Popen(["gpio", "-g", "pwm", "12", "0"])
 
 revCMD      = b"223B54"

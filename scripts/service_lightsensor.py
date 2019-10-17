@@ -11,7 +11,7 @@ from time import sleep
 # 0x29, 0x39 or 0x49
 BUS = 1
 TSL2561_ADDR = 0x39
-daynight_gpio = 0
+daynight_gpio = 1
 pwm_gpio = 12
 TSL2561_CHECK_INTERVAL=1
 PWM_MAX=1023
@@ -31,7 +31,7 @@ lastvalue = 0
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(daynight_gpio, GPIO.OUT)
-GPIO.output(0, GPIO.LOW)
+GPIO.output(daynight_gpio, GPIO.LOW)
 os.system("gpio -g mode " + str(pwm_gpio) + " pwm")
 a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
 b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
@@ -96,9 +96,9 @@ try:
         Level=PWM_MAX
 
       if avarage > LUX_DAY:
-        GPIO.output(0, GPIO.LOW)
+        GPIO.output(daynight_gpio, GPIO.LOW)
       elif avarage < LUX_NIGHT:
-        GPIO.output(0, GPIO.HIGH)
+        GPIO.output(daynight_gpio, GPIO.HIGH)
 
       os.system("gpio -g pwm " + str(pwm_gpio) + " " + str(Level))
 
