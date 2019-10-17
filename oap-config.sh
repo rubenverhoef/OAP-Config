@@ -172,6 +172,11 @@ function activate_rtc() {
     /usr/bin/python3 /usr/local/bin/bwsrtc
 }
 
+# Bluetooth config
+function bluetooth_config() {
+    sudo btswitch external
+}
+
 function activate_i2c() {
     sed -i '/./,/^$/!d' /boot/config.txt
     sed -i '/dtparam=i2c_arm=/d' /boot/config.txt
@@ -287,3 +292,4 @@ activate_watchdog
 phone_hotspot_config
 activate_ds18b20
 set_permissions
+bluetooth_config
