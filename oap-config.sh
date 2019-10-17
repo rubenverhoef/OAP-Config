@@ -64,6 +64,12 @@ function set_wallpaper() {
     sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
+# Set custom desktop settings
+function custom_desktop() {
+    install -d "/home/pi/.config/lxsession/LXDE-pi"
+    cp /etc/xdg/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart
+}
+
 # Set Splash boot screen
 function set_splash() {
     install -m 644 /boot/OAP-Config/desktop/splash1.h264   "/usr/share/openautopro"
@@ -274,6 +280,7 @@ killall autoapp
 update_system
 rpi_init
 remove_ssh_message
+custom_desktop
 hide_taskbar
 power_config
 update_wiringpi
