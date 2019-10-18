@@ -32,7 +32,7 @@ os.system("gpio -g mode " + str(pwm_gpio) + " pwm")
 a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
 b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
 
-Lux_Array = [100, 100, 100, 100, 100]
+Lux_Array = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 
 try:
   while True:
@@ -90,7 +90,7 @@ try:
         total=0
         for x in Lux_Array:
           total=total+x
-        avarage=total/5
+        avarage=total/10
 
         Level=int(round(a*avarage+b,0))
         if Level < 0:
