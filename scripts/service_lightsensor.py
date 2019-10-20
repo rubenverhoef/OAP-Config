@@ -13,7 +13,7 @@ BUS = 1
 TSL2561_ADDR = 0x39
 daynight_gpio = 1
 pwm_gpio = 12
-TSL2561_CHECK_INTERVAL=1
+TSL2561_CHECK_INTERVAL=0.5
 PWM_MAX=1023
 LUX_DARK_BR=50
 LUX_FULL_BR=200
@@ -41,6 +41,7 @@ try:
     if i2cBus.read_byte_data(TSL2561_ADDR, 0x80, 0x03) != 0x03:
       # Startup TSL2561
       i2cBus.write_byte_data(TSL2561_ADDR, 0x80, 0x03)
+      sleep (TSL2561_CHECK_INTERVAL)
     
     else:
       # read global brightness
