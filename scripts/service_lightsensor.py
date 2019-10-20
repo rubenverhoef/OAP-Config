@@ -5,6 +5,10 @@ import os
 import RPi.GPIO as GPIO
 import subprocess
 from time import sleep
+import pytz
+import astral
+from astral import *
+from datetime import *
 
 # ---------------------------------
 # the addresss of TSL2561 can be
@@ -20,11 +24,14 @@ LUX_FULL_BR=200
 LUX_DAY=100
 LUX_NIGHT=50
 # ---------------------------------
-
+# I2C Bus
 i2cBus = smbus.SMBus(BUS)
 
-lastvalue = 0
+# Sun data
+a = Astral()
+sun = a['Amsterdam'].sun(local=True, date=date.today())
 
+# GPIO stuff
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(daynight_gpio, GPIO.OUT)
 GPIO.output(daynight_gpio, GPIO.LOW)
@@ -99,12 +106,18 @@ try:
         elif Level > PWM_MAX:
           Level=PWM_MAX
 
-        if avarage > LUX_DAY:
-          GPIO.output(daynight_gpio, GPIO.LOW)
-        elif avarage < LUX_NIGHT:
-          GPIO.output(daynight_gpio, GPIO.HIGH)
-
         os.system("gpio -g pwm " + str(pwm_gpio) + " " + str(Level))
+
+        if avarage > LUX_DAY and night != False: # Day mode
+          now = datetime.now(pytz.utc)
+          if now >= sun['sunrise'] and now <= sun['sunset']:
+            night = False
+            GPIO.output(daynight_gpio, GPIO.LOW)
+        elif avarage < LUX_NIGHT and night != True: # Night mode
+          now = datetime.now(pytz.utc)
+          if not (now >= sun['sunrise'] and now <= sun['sunset']):
+            night = True
+            GPIO.output(daynight_gpio, GPIO.HIGH)
 
         # print("Lux = {} | ".format(avarage) + "Level = {}".format(Level))
 except KeyboardInterrupt:

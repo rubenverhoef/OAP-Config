@@ -159,6 +159,7 @@ function update_wiringpi() {
 
 # Install additional python packages
 function install_python_packages() {
+    pip3 install astral
     pip3 install PyUserInput
     python3 /boot/OAP-Config/OBD/obd/setup.py install
 }
