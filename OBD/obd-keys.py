@@ -2,11 +2,6 @@
 
 import os, sys, math, time, subprocess
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "PyUserInput"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "python-xlib")) # needed for PyUserInput
-sys.path.append(os.path.join(os.path.dirname(__file__), "obd"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "pint")) # needed for OBD
-
 from pykeyboard import PyKeyboard # import for emulating keyboard presses
 
 import obd #import for reading/sending obd messages

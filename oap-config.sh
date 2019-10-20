@@ -157,6 +157,12 @@ function update_wiringpi() {
     sudo dpkg -i /tmp/wiringpi.deb
 }
 
+# Install additional python packages
+function install_python_packages() {
+    pip3 install PyUserInput
+    python3 /boot/OAP-Config/OBD/obd/setup.py install
+}
+
 # uGreen DABBoard
 function activate_dab() {
     sed -i '/./,/^$/!d' /boot/config.txt
@@ -283,6 +289,7 @@ remove_ssh_message
 custom_desktop
 hide_taskbar
 power_config
+install_python_packages
 update_wiringpi
 activate_dab
 activate_rtc
