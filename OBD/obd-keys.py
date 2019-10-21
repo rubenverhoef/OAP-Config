@@ -270,18 +270,21 @@ def key_clb(data):
     return
 
 #obd.logger.setLevel(obd.logging.DEBUG)
-
-connection = obd.OBD("/dev/ttyUSB0", protocol = "B")
-
-connection.supported_commands.add(rev)
-# connection.supported_commands.add(light)
-connection.supported_commands.add(sw)
-connection.supported_commands.add(dpad)
-connection.supported_commands.add(key)
+reconnect = True
+errorcnt = 0
 
 while(True):
     time.sleep(1)
-    print("Waiting for connection")
+    if reconnect == True:
+        reconnect = False
+        connection = obd.OBD("/dev/ttyUSB0", protocol = "B")
+
+        connection.supported_commands.add(rev)
+        # connection.supported_commands.add(light)
+        connection.supported_commands.add(sw)
+        connection.supported_commands.add(dpad)
+        connection.supported_commands.add(key)
+
     while(connection.status() == OBDStatus.CAR_CONNECTED):
         try:
             rev_clb(connection.query(rev))
@@ -303,3 +306,8 @@ while(True):
                 key_clb(connection.query(key))
             except:
                 pass
+    if connection.status() == OBDStatus.NOT_CONNECTED:
+        errorcnt += 1
+        if errorcnt >= 10:
+            reconnect = True
+            connection.close()
