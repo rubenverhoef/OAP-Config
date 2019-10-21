@@ -78,12 +78,11 @@ function set_splash() {
 
 # Remove unwanted OAP apps
 function config_oap() {
-    install -m 644 /boot/OAP-Config/config/openauto_applications.ini        "/home/pi"
-    install -m 644 /boot/OAP-Config/config/openauto_controller_service.ini  "/home/pi"
-    install -m 644 /boot/openauto_license.dat                               "/home/pi"
-    install -m 644 /boot/OAP-Config/config/openauto_system.ini              "/home/pi"
-    install -m 644 /boot/OAP-Config/config/openauto_tos.dat                 "/home/pi"
-    install -m 644 /boot/OAP-Config/config/openauto_wifi_recent.ini         "/home/pi"
+    install -m 644 /boot/OAP-Config/config/openauto_applications.ini        "/home/pi/.openauto/config"
+    install -m 644 /boot/openauto_license.dat                               "/home/pi/.openauto"
+    install -m 644 /boot/OAP-Config/config/openauto_system.ini              "/home/pi/.openauto/config"
+    install -m 644 /boot/OAP-Config/config/openauto_terms_of_service.dat    "/home/pi/.openauto"
+    install -m 644 /boot/OAP-Config/config/openauto_wifi_recent.ini         "/home/pi/.openauto/config"
     install_radio_icons
 }
 
