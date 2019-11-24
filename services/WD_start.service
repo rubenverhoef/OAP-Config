@@ -6,8 +6,6 @@
 [Service]
  Type=oneshot
  ExecStartPre=/bin/touch /dev/watchdog
- ExecStart=/usr/bin/gpio -g mode 5 out
- ExecStartPost=/usr/bin/gpio -g write 5 1
 
 [Install]
  WantedBy=sysinit.target
