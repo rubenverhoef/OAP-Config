@@ -72,8 +72,8 @@ function custom_desktop() {
 
 # Set Splash boot screen
 function set_splash() {
-    install -m 644 /boot/OAP-Config/desktop/splash1.h264   "/usr/share/openautopro"
-    install -m 644 /boot/OAP-Config/desktop/splash2.h264   "/usr/share/openautopro"
+    install -m 644 /boot/OAP-Config/splash/splash1.h264   "/usr/share/openautopro"
+    install -m 644 /boot/OAP-Config/splash/splash2.h264   "/usr/share/openautopro"
 }
 
 # Remove unwanted OAP apps
