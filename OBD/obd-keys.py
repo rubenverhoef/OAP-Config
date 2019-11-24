@@ -12,7 +12,7 @@ import obd.decoders as d
 
 keyboard = PyKeyboard()
 # Set day/night output
-# subprocess.Popen(["gpio", "-g", "mode", "0", "out"])
+# subprocess.Popen(["gpio", "-g", "mode", "1", "out"])
 
 class OBDStruct:
     def __init__(self, bitSelect, isPressing, button):
