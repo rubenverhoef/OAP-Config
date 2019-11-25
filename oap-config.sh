@@ -139,17 +139,6 @@ function activate_services() {
     sh -c "echo '@bash /opt/OAP/OBD_startup.sh' >> /home/pi/.config/lxsession/LXDE-pi/autostart"
 }
 
-# Power settings
-function power_config() {
-    sed -i '/./,/^$/!d' /boot/config.txt
-    sed -i 's/^max_usb_current.*//' /boot/config.txt
-    sed -i 's/^# Custom power settings.*//' /boot/config.txt
-    sed -i '/./,/^$/!d' /boot/config.txt
-    sh -c "echo '' >> /boot/config.txt"
-    sh -c "echo '# Custom power settings' >> /boot/config.txt"
-    sh -c "echo 'max_usb_current=1' >> /boot/config.txt"
-}
-
 # Update wiring pi (RPI4 needs 2.52)
 function update_wiringpi() {
     wget -q https://project-downloads.drogon.net/wiringpi-latest.deb -O /tmp/wiringpi.deb
@@ -288,7 +277,6 @@ rpi_init
 remove_ssh_message
 custom_desktop
 hide_taskbar
-power_config
 install_python_packages
 update_wiringpi
 activate_dab
