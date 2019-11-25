@@ -19,10 +19,10 @@ daynight_gpio = 1
 pwm_gpio = 12
 TSL2561_CHECK_INTERVAL=0.5
 PWM_MAX=1023
-LUX_DARK_BR=50
-LUX_FULL_BR=200
-LUX_DAY=100
-LUX_NIGHT=50
+LUX_DARK_BR=5
+LUX_FULL_BR=25
+LUX_DAY=20
+LUX_NIGHT=10
 # ---------------------------------
 # I2C Bus
 i2cBus = smbus.SMBus(BUS)
