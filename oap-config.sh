@@ -7,10 +7,27 @@ fi
 
 # Update the system
 function update_system() {
-    sudo apt-get update -y
-    sudo apt-get dist-upgrade -y
-    sudo rpi-update
-    sudo apt-get autoremove -y
+    apt-get update -y
+    apt-get dist-upgrade -y
+    apt full-upgrade -y
+    apt-get autoremove -y
+}
+
+# configure bootloader to poweroff
+function config_bootloader() {
+    # see https://github.com/raspberrypi/rpi-eeprom/tree/master/firmware/critical for latest
+    apt install rpi-eeprom -y
+    cp /lib/firmware/raspberrypi/bootloader/critical/pieeprom-2019-09-10.bin /home/pi/pieeprom.bin
+    rpi-eeprom-config /home/pi/pieeprom.bin > /home/pi/bootconf.txt
+    
+    sed -i 's/^WAKE_ON_GPIO=1/WAKE_ON_GPIO=0/' /home/pi/bootconf.txt
+    sed -i 's/^POWER_OFF_ON_HALT=0/POWER_OFF_ON_HALT=1/' /home/pi/bootconf.txt
+
+    rpi-eeprom-config --out /home/pi/pieeprom-new.bin --config /home/pi/bootconf.txt /home/pi/pieeprom.bin
+    rpi-eeprom-update -d -f /home/pi/pieeprom-new.bin
+    rm -f /home/pi/pieeprom-new.bin
+    rm -f /home/pi/pieeprom.bin
+    rm -f /home/pi/bootconf.txt
 }
 
 # Desktop icons
