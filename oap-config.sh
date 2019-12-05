@@ -141,6 +141,7 @@ function install_services() {
     install -m 644 /boot/OAP-Config/services/dabboard.service                   "/etc/systemd/system/"
 
     install -d "/opt/OAP"
+    install -m 755 /boot/OAP-Config/OBD/obd-keys.py                             "/opt/OAP/"
     install -m 755 /boot/OAP-Config/scripts/service_lightsensor.py              "/opt/OAP/"
     install -m 755 /boot/OAP-Config/scripts/service_OAP_startup.sh              "/opt/OAP/"
     install -m 755 /boot/OAP-Config/OBD/OBD_startup.sh                          "/opt/OAP/"
