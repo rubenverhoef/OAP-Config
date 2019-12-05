@@ -39,13 +39,14 @@ os.system("gpio -g mode " + str(pwm_gpio) + " pwm")
 a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
 b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
 
+night=True
 Lux_Array = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 
 try:
   while True:
     sleep (TSL2561_CHECK_INTERVAL)
 
-    if i2cBus.read_byte_data(TSL2561_ADDR, 0x80, 0x03) != 0x03:
+    if i2cBus.read_byte_data(TSL2561_ADDR, 0x80) & 0x03 is not 0x03:
       # Startup TSL2561
       i2cBus.write_byte_data(TSL2561_ADDR, 0x80, 0x03)
       sleep (TSL2561_CHECK_INTERVAL)
