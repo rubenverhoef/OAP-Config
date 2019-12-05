@@ -3,4 +3,4 @@ Name=Reboot
 Exec=sudo reboot
 Terminal=false
 Type=Application
-Icon=/home/pi/icons/reboot.png
+Icon=/home/pi/.openauto/icons/reboot.png

@@ -3,4 +3,4 @@ Name=OAP
 Exec=bash /opt/OAP/OAP_startup.sh
 Terminal=false
 Type=Application
-Icon=/home/pi/icons/openauto.png
+Icon=/home/pi/.openauto/icons/openauto.png

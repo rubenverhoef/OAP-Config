@@ -15,10 +15,11 @@ function update_system() {
 
 # Desktop icons
 function set_icons() {
+    apt-get install xdotool
     rm -f /home/pi/Desktop/openauto
 
-    install -m 644 /boot/OAP-Config/desktop/openauto.png        "/home/pi/icons"
-    install -m 644 /boot/OAP-Config/desktop/reboot.png          "/home/pi/icons"
+    install -m 644 /boot/OAP-Config/desktop/openauto.png        "/home/pi/.openauto/icons"
+    install -m 644 /boot/OAP-Config/desktop/reboot.png          "/home/pi/.openauto/icons"
 
     install -m 644 /boot/OAP-Config/desktop/openauto.desktop    "/home/pi/Desktop"
     install -m 644 /boot/OAP-Config/desktop/reboot.desktop      "/home/pi/Desktop"
