@@ -138,6 +138,7 @@ function install_rearcam() {
 function install_services() {
     install -m 644 /boot/OAP-Config/services/OAP_startup.service                "/etc/systemd/system/"
     install -m 644 /boot/OAP-Config/services/lightsensor.service                "/etc/systemd/system/"
+    install -m 644 /boot/OAP-Config/services/dabboard.service                   "/etc/systemd/system/"
 
     install -d "/opt/OAP"
     install -m 755 /boot/OAP-Config/scripts/service_lightsensor.py              "/opt/OAP/"
@@ -152,6 +153,7 @@ function install_services() {
 function activate_services() {
     systemctl enable OAP_startup.service
     systemctl enable lightsensor.service
+    systemctl enable dabboard.service
     sed -i '/@bash \/opt\/OAP\/OBD_startup.sh/d' /home/pi/.config/lxsession/LXDE-pi/autostart
     sh -c "echo '@bash /opt/OAP/OBD_startup.sh' >> /home/pi/.config/lxsession/LXDE-pi/autostart"
 }
@@ -171,6 +173,7 @@ function install_python_packages() {
 
 # uGreen DABBoard
 function activate_dab() {
+    apt-get install libncurses5 -y
     sed -i '/./,/^$/!d' /boot/config.txt
     sed -i 's/^# DAB Setup.*//' /boot/config.txt
     sed -i 's/^dtparam=spi=on.*//' /boot/config.txt

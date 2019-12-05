@@ -35,10 +35,6 @@ gpio -g mode 12 pwm
 # Enable pullup of Ignition pin
 gpio -g mode 13 up
 
-# Bootup the DAB radio (and output to I2S)
-sudo killall radio_cli
-sudo /opt/OAP/radio_cli -b D -o 1
-
 # Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC)
 if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Faded")" ]; then
     echo "Creating Faded sink"
