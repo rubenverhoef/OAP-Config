@@ -283,6 +283,7 @@ update_wiringpi
 activate_dab
 activate_rtc
 activate_gps
+activate_watchdog
 set_wallpaper
 set_splash
 set_icons
@@ -291,7 +292,6 @@ install_rearcam
 install_services
 activate_services
 install_raspap
-activate_watchdog
 phone_hotspot_config
 activate_ds18b20
 set_permissions
