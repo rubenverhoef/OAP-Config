@@ -149,7 +149,7 @@ function update_wiringpi() {
 function install_python_packages() {
     pip3 install astral
     pip3 install PyUserInput
-    python3 /boot/OAP-Config/OBD/obd/setup.py install
+    cd /boot/OAP-Config/OBD/obd && python3 /boot/OAP-Config/OBD/obd/setup.py install
 }
 
 # uGreen DABBoard
