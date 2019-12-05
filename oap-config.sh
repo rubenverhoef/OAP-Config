@@ -73,6 +73,7 @@ function custom_desktop() {
 
 # Set Splash boot screen
 function set_splash() {
+    cp /boot/OAP-Config/desktop/wallpaper.png /usr/share/plymouth/themes/pix/splash.png     
     install -m 644 /boot/OAP-Config/splash/splash1.h264   "/usr/share/openautopro"
     install -m 644 /boot/OAP-Config/splash/splash2.h264   "/usr/share/openautopro"
 }
