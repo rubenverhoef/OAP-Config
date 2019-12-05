@@ -290,6 +290,7 @@ function activate_ds18b20() {
 
 killall autoapp
 update_system
+config_bootloader
 rpi_init
 remove_ssh_message
 custom_desktop
