@@ -1,3 +1,0 @@
-[submodule "OBD"]
-	path = OBD
-	url = https://github.com/rubenverhoef/python-OBD.git
