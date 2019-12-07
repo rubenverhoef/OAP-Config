@@ -40,13 +40,18 @@ os.system("gpio -g mode " + str(pwm_gpio) + " pwm")
 a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
 b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
 
+now = datetime.now(pytz.utc)
 night = -1
-NightmodeUnset = True
-GPIO.output(daynight_gpio, GPIO.HIGH)
+if now >= sun['sunrise'] and now <= sun['sunset']: # Day
+  night = False
+  GPIO.output(daynight_gpio, GPIO.LOW)
+elif not (now >= sun['sunrise'] and now <= sun['sunset']): # Night
+  night = True
+  GPIO.output(daynight_gpio, GPIO.HIGH)
 
 Lux_Array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-os.mkdir("/tmp/TSL2561")
+if not os.path.exists("/tmp/TSL2561"):
+  os.mkdir("/tmp/TSL2561")
 file = open("/tmp/TSL2561/TSL2561-" + datetime.now().strftime("%d%m%Y-%H%M%S"), "w")
 
 try:
@@ -111,15 +116,13 @@ try:
 
         if avarage > LUX_DAY and night != False: # Day mode
           now = datetime.now(pytz.utc)
-          if (now >= sun['sunrise'] and now <= sun['sunset']) or NightmodeUnset == True:
+          if now >= sun['sunrise'] and now <= sun['sunset']:
             night = False
-            NightmodeUnset = False
             GPIO.output(daynight_gpio, GPIO.LOW)
         elif avarage < LUX_NIGHT and night != True: # Night mode
           now = datetime.now(pytz.utc)
-          if (not (now >= sun['sunrise'] and now <= sun['sunset'])) or NightmodeUnset == True:
+          if not (now >= sun['sunrise'] and now <= sun['sunset']):
             night = True
-            NightmodeUnset = False
             GPIO.output(daynight_gpio, GPIO.HIGH)
 
         # print("Lux = {} | ".format(avarage) + "Level = {} | ".format(Level) + "Night = {}".format(night))
