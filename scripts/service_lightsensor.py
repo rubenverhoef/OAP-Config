@@ -19,10 +19,10 @@ daynight_gpio = 1
 pwm_gpio = 12
 TSL2561_CHECK_INTERVAL=0.5
 PWM_MAX=1023
-LUX_DARK_BR=5
-LUX_FULL_BR=25
-LUX_DAY=20
-LUX_NIGHT=10
+LUX_DARK_BR=50
+LUX_FULL_BR=250
+LUX_DAY=200
+LUX_NIGHT=100
 # ---------------------------------
 # I2C Bus
 i2cBus = smbus.SMBus(BUS)
@@ -32,6 +32,7 @@ a = Astral()
 sun = a['Amsterdam'].sun(local=True, date=date.today())
 
 # GPIO stuff
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(daynight_gpio, GPIO.OUT)
 GPIO.output(daynight_gpio, GPIO.LOW)
@@ -39,45 +40,44 @@ os.system("gpio -g mode " + str(pwm_gpio) + " pwm")
 a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
 b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
 
-night=True
-Lux_Array = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
+night = -1
+NightmodeUnset = True
+GPIO.output(daynight_gpio, GPIO.HIGH)
+
+Lux_Array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+os.mkdir("/tmp/TSL2561")
+file = open("/tmp/TSL2561/TSL2561-" + datetime.now().strftime("%d%m%Y-%H%M%S"), "w")
 
 try:
   while True:
     sleep (TSL2561_CHECK_INTERVAL)
-
-    if i2cBus.read_byte_data(TSL2561_ADDR, 0x80) & 0x03 is not 0x03:
+    
+    PowerState = i2cBus.read_byte_data(TSL2561_ADDR, 0x80)
+    if PowerState & 0x03 is not 0x03:
       # Startup TSL2561
+      # print("starting up")
       i2cBus.write_byte_data(TSL2561_ADDR, 0x80, 0x03)
+      i2cBus.write_byte_data(TSL2561_ADDR, 0x81, 0x12)
       sleep (TSL2561_CHECK_INTERVAL)
     
     else:
+      # print("read Cycle")
+
       # read global brightness
-      # read low byte
-      LSB = i2cBus.read_byte_data(TSL2561_ADDR, 0x8C)
-      # read high byte
-      MSB = i2cBus.read_byte_data(TSL2561_ADDR, 0x8D)
-      Ambient = (MSB << 8) + LSB
-      #print ("Ambient: {}".format(Ambient))
+      Ambient = i2cBus.read_word_data(TSL2561_ADDR, 0xAC)
+      # print ("Ambient: {}".format(Ambient))
 
-      # read infra red
-      # read low byte
-      LSB = i2cBus.read_byte_data(TSL2561_ADDR, 0x8E)
-      # read high byte
-      MSB = i2cBus.read_byte_data(TSL2561_ADDR, 0x8F)
-      Infrared = (MSB << 8) + LSB
-      #print ("Infrared: {}".format(Infrared))
-
-      # Calc visible spectrum
-      Visible = Ambient - Infrared
-      #print ("Visible: {}".format(Visible))
+      # read IR
+      Infrared = i2cBus.read_word_data(TSL2561_ADDR, 0xAE)
+      # print ("Infrared: {}".format(Infrared))
 
       # Calc factor Infrared/Ambient
       Ratio = 0
       Lux = 0
       if Ambient != 0:
         Ratio = float(Infrared)/float(Ambient)
-        #print ("Ratio: {}".format(Ratio))
+        # print ("Ratio: {}".format(Ratio))
 
         # Calc lux based on data sheet TSL2561T
         # T, FN, and CL Package
@@ -91,10 +91,10 @@ try:
           Lux = 0.00146*float(Ambient) - 0.00112*float(Infrared)
         else:
           Lux = 0
-        Luxrounded=round(Lux,0)
+        # Luxrounded=round(Lux,0)
+        # print("Lux = {} | ".format(Lux))
 
-        # os.system("echo {} > /tmp/tsl2561".format(Luxrounded))
-        Lux_Array.append(Luxrounded)
+        Lux_Array.append(Lux)
         Lux_Array.pop(0)
         total=0
         for x in Lux_Array:
@@ -111,16 +111,21 @@ try:
 
         if avarage > LUX_DAY and night != False: # Day mode
           now = datetime.now(pytz.utc)
-          if now >= sun['sunrise'] and now <= sun['sunset']:
+          if (now >= sun['sunrise'] and now <= sun['sunset']) or NightmodeUnset == True:
             night = False
+            NightmodeUnset = False
             GPIO.output(daynight_gpio, GPIO.LOW)
         elif avarage < LUX_NIGHT and night != True: # Night mode
           now = datetime.now(pytz.utc)
-          if not (now >= sun['sunrise'] and now <= sun['sunset']):
+          if (not (now >= sun['sunrise'] and now <= sun['sunset'])) or NightmodeUnset == True:
             night = True
+            NightmodeUnset = False
             GPIO.output(daynight_gpio, GPIO.HIGH)
 
-        # print("Lux = {} | ".format(avarage) + "Level = {}".format(Level))
+        # print("Lux = {} | ".format(avarage) + "Level = {} | ".format(Level) + "Night = {}".format(night))
+        file.write("Lux = {} | ".format(avarage) + "Level = {} | ".format(Level) + "Night = {}".format(night))
+        file.write("\n\r")
 except KeyboardInterrupt:
   pass
 GPIO.cleanup()
+i2cBus.write_byte_data(TSL2561_ADDR, 0x80, 0x00)
