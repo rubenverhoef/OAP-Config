@@ -14,7 +14,7 @@ Description=DABBoard Radio autostart script
 After=network.target
 
 [Service]
-ExecStart=/opt/OAP/radio_cli -b D -o 1 -l 63
+ExecStart=/opt/OAP/radio_cli -b D -o 1
 ExecStop=/opt/OAP/radio_cli -k
 User=root
 Type=oneshot
