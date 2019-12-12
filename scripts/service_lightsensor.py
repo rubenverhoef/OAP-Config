@@ -54,6 +54,8 @@ if not os.path.exists("/tmp/TSL2561"):
   os.mkdir("/tmp/TSL2561")
 file = open("/tmp/TSL2561/TSL2561-" + datetime.now().strftime("%d%m%Y-%H%M%S"), "w")
 
+i2cBus.write_byte_data(TSL2561_ADDR, 0x80, 0x00)
+
 try:
   while True:
     sleep (TSL2561_CHECK_INTERVAL)
@@ -77,57 +79,60 @@ try:
       Infrared = i2cBus.read_word_data(TSL2561_ADDR, 0xAE)
       # print ("Infrared: {}".format(Infrared))
 
-      # Calc factor Infrared/Ambient
-      Ratio = 0
-      Lux = 0
-      if Ambient != 0:
+      # Calc factor Infrared/Ambient      
+      if Ambient == 0:
+        Ratio = 0
+      else:
         Ratio = float(Infrared)/float(Ambient)
-        # print ("Ratio: {}".format(Ratio))
 
-        # Calc lux based on data sheet TSL2561T
-        # T, FN, and CL Package
-        if 0 < Ratio <= 0.50:
-          Lux = 0.0304*float(Ambient) - 0.062*float(Ambient)*(Ratio**1.4)
-        elif 0.50 < Ratio <= 0.61:
-          Lux = 0.0224*float(Ambient) - 0.031*float(Infrared)
-        elif 0.61 < Ratio <= 0.80:
-          Lux = 0.0128*float(Ambient) - 0.0153*float(Infrared)
-        elif 0.80 < Ratio <= 1.3:
-          Lux = 0.00146*float(Ambient) - 0.00112*float(Infrared)
-        else:
-          Lux = 0
-        # Luxrounded=round(Lux,0)
-        # print("Lux = {} | ".format(Lux))
+      # print ("Ratio: {}".format(Ratio))
 
-        Lux_Array.append(Lux)
-        Lux_Array.pop(0)
-        total=0
-        for x in Lux_Array:
-          total=total+x
-        avarage=total/10
+      # Calc lux based on data sheet TSL2561T
+      # T, FN, and CL Package
+      if 0 < Ratio <= 0.50:
+        Lux = 0.0304*float(Ambient) - 0.062*float(Ambient)*(Ratio**1.4)
+      elif 0.50 < Ratio <= 0.61:
+        Lux = 0.0224*float(Ambient) - 0.031*float(Infrared)
+      elif 0.61 < Ratio <= 0.80:
+        Lux = 0.0128*float(Ambient) - 0.0153*float(Infrared)
+      elif 0.80 < Ratio <= 1.3:
+        Lux = 0.00146*float(Ambient) - 0.00112*float(Infrared)
+      else:
+        Lux = 0
+      # print("Lux = {} | ".format(Lux))
 
-        Level=int(round(a*avarage+b,0))
-        if Level < 0:
-          Level=0
-        elif Level > PWM_MAX:
-          Level=PWM_MAX
+      if (Lux > LUX_FULL_BR):
+        Lux = LUX_FULL_BR
 
-        os.system("gpio -g pwm " + str(pwm_gpio) + " " + str(Level))
+      Lux_Array.append(Lux)
+      Lux_Array.pop(0)
+      total=0
+      for x in Lux_Array:
+        total=total+x
+      avarage=total/10
 
-        if avarage > LUX_DAY and night != False: # Day mode
-          now = datetime.now(pytz.utc)
-          if now >= sun['sunrise'] and now <= sun['sunset']:
-            night = False
-            GPIO.output(daynight_gpio, GPIO.LOW)
-        elif avarage < LUX_NIGHT and night != True: # Night mode
-          now = datetime.now(pytz.utc)
-          if not (now >= sun['sunrise'] and now <= sun['sunset']):
-            night = True
-            GPIO.output(daynight_gpio, GPIO.HIGH)
+      Level=int(round(a*avarage+b,0))
+      if Level < 0:
+        Level=0
+      elif Level > PWM_MAX:
+        Level=PWM_MAX
 
-        # print("Lux = {} | ".format(avarage) + "Level = {} | ".format(Level) + "Night = {}".format(night))
-        file.write("Lux = {} | ".format(avarage) + "Level = {} | ".format(Level) + "Night = {}".format(night))
-        file.write("\n\r")
+      os.system("gpio -g pwm " + str(pwm_gpio) + " " + str(Level))
+
+      if avarage > LUX_DAY and night != False: # Day mode
+        now = datetime.now(pytz.utc)
+        if now >= sun['sunrise'] and now <= sun['sunset']:
+          night = False
+          GPIO.output(daynight_gpio, GPIO.LOW)
+      elif avarage < LUX_NIGHT and night != True: # Night mode
+        now = datetime.now(pytz.utc)
+        if not (now >= sun['sunrise'] and now <= sun['sunset']):
+          night = True
+          GPIO.output(daynight_gpio, GPIO.HIGH)
+
+      # print("Lux = {} | ".format(avarage) + "Level = {} | ".format(Level) + "Night = {}".format(night))
+      file.write("Lux = {} | ".format(avarage) + "Level = {} | ".format(Level) + "Night = {}".format(night))
+      file.write("\n\r")
 except KeyboardInterrupt:
   pass
 GPIO.cleanup()
