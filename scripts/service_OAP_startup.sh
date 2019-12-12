@@ -88,7 +88,7 @@ do
     if [ -z "$AA_RUNNING" ]; then
         SET_SINK=0
         IGNITION_GPIO=`gpio -g read 13`
-        if [ $IGNITION_GPIO -ne 0 ]; then
+        if [ $IGNITION_GPIO -ne 1 ]; then
             let "IGNITION_CNT++"
             if [ $IGNITION_CNT -gt 10 ]; then
                 sudo shutdown -h now
