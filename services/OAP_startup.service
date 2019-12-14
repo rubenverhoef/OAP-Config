@@ -4,8 +4,10 @@
 [Service]
  Type=simple
  ExecStart=/opt/OAP/service_OAP_startup.sh
- RemainAfterExit=no
  Restart=on-failure
+ StartLimitInterval=60
+ RestartSec=5
+ StartLimitBurst=3
  
 [Install]
  WantedBy=multi-user.target

@@ -1,24 +1,15 @@
-# This is a systemd service file for the uGreen DABBoardRadio
-# You can place it into /lib/systemd/system/
-# to register a system service for the dabboard.
-# this is useful for example to auto-start the radio after system boot.
-# make sure to configure the station info below to a station in your region
-# 
-# use 
-# sudo systemctl enable dabboard
-# to enable the service at startup
-
-
 [Unit]
-Description=DABBoard Radio autostart script
-After=network.target
-
+ Description=DAB service
+ After=network.target
+ 
 [Service]
-ExecStart=/opt/OAP/radio_cli -b D -o 1
-ExecStop=/opt/OAP/radio_cli -k
-User=root
-Type=oneshot
-RemainAfterExit=yes
+ Type=simple
+ ExecStart=/opt/OAP/TuneDAB.sh
+ Restart=on-failure
+ StartLimitInterval=60
+ RestartSec=5
+ StartLimitBurst=3
 
 [Install]
-WantedBy=multi-user.target
+ WantedBy=multi-user.target
+ 
