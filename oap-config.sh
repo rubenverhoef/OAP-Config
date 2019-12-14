@@ -136,6 +136,7 @@ function install_rearcam() {
 
 # Install services
 function install_services() {
+    apt install inotify-tools -y
     install -m 644 /boot/OAP-Config/services/OAP_startup.service                "/etc/systemd/system/"
     install -m 644 /boot/OAP-Config/services/lightsensor.service                "/etc/systemd/system/"
     install -m 644 /boot/OAP-Config/services/dabboard.service                   "/etc/systemd/system/"
