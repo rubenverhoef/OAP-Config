@@ -30,11 +30,6 @@ else
     rm -f /home/pi/audio_error.sh
 fi
 
-# Set backlight pin to PWM
-gpio -g mode 12 pwm
-# Enable pullup of Ignition pin
-gpio -g mode 13 up
-
 # Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC)
 if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Faded")" ]; then
     echo "Creating Faded sink"
