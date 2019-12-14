@@ -3,12 +3,20 @@
 import os, sys, math, time, subprocess
 
 from pykeyboard import PyKeyboard # import for emulating keyboard presses
+import RPi.GPIO as GPIO
 
 import obd #import for reading/sending obd messages
 from obd import OBDCommand, OBDStatus
 from obd.protocols import ECU
 from obd.utils import bytes_to_int
 import obd.decoders as d
+
+reverseGPIO = 17
+# GPIO stuff
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(reverseGPIO, GPIO.OUT)
+GPIO.output(reverseGPIO, GPIO.LOW)
 
 keyboard = PyKeyboard()
 
@@ -48,11 +56,13 @@ class OBDStruct:
             subprocess.Popen(["sudo", "./TuneDAB.sh", "-c", "17", "-e", "33746", "-f", "28"])
             
     def revCamOn(self):
+        GPIO.output(reverseGPIO, GPIO.HIGH)
         keyboard.tap_key(keyboard.function_keys[6])
         os.chdir("/opt/OAP/cam_overlay/")
         subprocess.Popen(["./cam_overlay.bin", "-s", "-d", "/dev/v4l/by-id/usb-fushicai_usbtv007_300000000002-video-index0"])
 
     def revCamOff(self):
+        GPIO.output(reverseGPIO, GPIO.LOW)
         keyboard.tap_key(keyboard.function_keys[6])
         subprocess.Popen(["killall", "cam_overlay.bin"])
 
