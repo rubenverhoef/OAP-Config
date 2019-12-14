@@ -60,9 +60,7 @@ if [ -z "$DAB_MOD" ]; then
 fi
 
 # Some variables
-TIME_SET_TRY=0
 IGNITION_CNT=0
-TIME_SET=0
 AUX_STATE=0
 FADE_STATE=0
 SET_SINK=0
@@ -124,20 +122,6 @@ do
         OLD_VOLUME=$(runuser -l pi -c "pactl list sinks" | awk 'BEGIN { ORS=" " } /Name:/ {printf "\r\n%s ", $2;} /Volume:/ {print $5};' | grep "Faded" | awk '{ print $2 }')
         runuser -l pi -c "pactl set-sink-volume Faded 0%"
         FADE_STATE=1
-    fi
-
-    # Set time from DAB radio
-    if [ $TIME_SET -ne 1 ]; then
-        if [ $TIME_SET_TRY -lt 100 ]; then
-            let "TIME_SET_TRY++"
-            TIME=$(sudo /opt/OAP/radio_cli -t | grep T.*Z | sed 's/T/ /; s/Z/ /')
-            YEAR=$(echo $TIME | awk '{ print $1 }' | sed 's/-.*//')
-
-            if [ -n "$TIME" ] && [ "$YEAR" -gt "0" ]; then
-                TIME_SET=1
-                sudo date -s "$TIME" --utc
-            fi
-        fi
     fi
 done
 
