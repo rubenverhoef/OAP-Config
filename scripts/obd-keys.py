@@ -11,8 +11,6 @@ from obd.utils import bytes_to_int
 import obd.decoders as d
 
 keyboard = PyKeyboard()
-# Set day/night output
-# subprocess.Popen(["gpio", "-g", "mode", "1", "out"])
 
 class OBDStruct:
     def __init__(self, bitSelect, isPressing, button):
@@ -57,14 +55,6 @@ class OBDStruct:
     def revCamOff(self):
         keyboard.tap_key(keyboard.function_keys[6])
         subprocess.Popen(["killall", "cam_overlay.bin"])
-    
-    def ModeNight(self):
-        subprocess.Popen(["gpio", "-g", "write", "1", "1"])
-        subprocess.Popen(["gpio", "-g", "pwm", "12", "800"])
-
-    def ModeDay(self):
-        subprocess.Popen(["gpio", "-g", "write", "1", "0"])
-        subprocess.Popen(["gpio", "-g", "pwm", "12", "0"])
 
 revCMD      = b"223B54"
 revHeader   = b'000726'
@@ -95,35 +85,6 @@ def rev_clb(data):
     except:
         pass
     return
-
-# lightCMD    = b"227151"
-# lightHeader = b'000726'
-# lightBytes  = 2
-# lightBase   = 0x6271510000
-# lightBeam   = OBDStruct((0x6271510008 ^ lightBase), False, None)
-
-# light = OBDCommand("Light status",
-#                "Decode Light status Command",
-#                lightCMD,
-#                (3 + lightBytes),
-#                d.drop,
-#                ECU.ALL,
-#                True,
-#                lightHeader)
-
-# def light_clb(data):
-#     try:
-#         data = bytes_to_int(data.messages[0].data[3:])
-#         if(lightBeam.bitSelect & data):
-#             if(lightBeam.isPressing is False):
-#                 lightBeam.isPressing = True
-#                 lightBeam.ModeNight()
-#         elif(lightBeam.isPressing is True):
-#             lightBeam.isPressing = False
-#             lightBeam.ModeDay()
-#     except:
-#         pass
-#     return
 
 swCMD     = b"22833C"
 swHeader  = b'0007A5'
@@ -277,7 +238,6 @@ while(True):
         connection = obd.OBD("/dev/ttyUSB0", protocol = "B")
 
         connection.supported_commands.add(rev)
-        # connection.supported_commands.add(light)
         connection.supported_commands.add(sw)
         connection.supported_commands.add(dpad)
         connection.supported_commands.add(key)
