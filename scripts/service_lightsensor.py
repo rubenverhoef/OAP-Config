@@ -15,7 +15,7 @@ from datetime import *
 # 0x29, 0x39 or 0x49
 BUS = 1
 TSL2561_ADDR = 0x39
-daynight_gpio = 1
+daynight_gpio = 0
 pwm_gpio = 12
 TSL2561_CHECK_INTERVAL=0.5
 PWM_MAX=1023

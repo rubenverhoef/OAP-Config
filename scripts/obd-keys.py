@@ -11,7 +11,7 @@ from obd.protocols import ECU
 from obd.utils import bytes_to_int
 import obd.decoders as d
 
-reverseGPIO = 17
+reverseGPIO = 27
 # GPIO stuff
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
