@@ -1,5 +1,6 @@
 [Unit]
  Description=Custom OAP startup service
+ After=sound.target
 
 [Service]
  Type=simple
