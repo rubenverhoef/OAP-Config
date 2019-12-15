@@ -4,9 +4,9 @@
 TIME_SET_TRY=0
 TIME_SET=0
 trycnt=10
-bootup=0
 err=0
 Argument=""
+LastArgument=""
 
 if [ ! -f "/home/pi/TuneStation" ]; then
     touch /home/pi/TuneStation
@@ -15,13 +15,11 @@ fi
 if [ -z "$1" ]; then
     for (( ; ; ))
     do
-        if [ "$bootup" -eq 0 ] || [ $err -ge $trycnt ]; then
-            bootup=1
-            err=0
-            while read line; do
-                Argument="$line"
-            done </home/pi/TuneStation
-        else
+        while read line; do
+            Argument="$line"
+        done </home/pi/TuneStation
+
+        if [ "$Argument" == "$LastArgument" ] && [ $err == 0 ]; then
             while read j
             do
                 while read line; do
@@ -29,6 +27,7 @@ if [ -z "$1" ]; then
                 done </home/pi/TuneStation
             done <  <(inotifywait -q -e modify /home/pi/TuneStation)
         fi
+        err=0
 
         if [[ "$Argument" == *"-k"* ]]; then
             DAB_State=$(/opt/OAP/radio_cli -i | grep "not booted up, no firmware loaded")
@@ -88,6 +87,7 @@ if [ -z "$1" ]; then
         else
             /opt/OAP/radio_cli $Argument
         fi
+        LastArgument="$Argument"
     done
 else
     echo "$@" > /home/pi/TuneStation
