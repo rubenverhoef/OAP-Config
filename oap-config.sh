@@ -228,27 +228,6 @@ function activate_gps() {
     sed -i 's/^GPSD_OPTIONS=.*/GPSD_OPTIONS="-n"/' /etc/default/gpsd
 }
 
-function install_raspap() {
-    if [ ! -d "/etc/raspap" ]; then
-        wget -q https://git.io/voEUQ -O /tmp/raspap && bash /tmp/raspap
-    fi
-
-    # set SSID, Pass
-    sed -i 's/^ssid=.*/ssid=Ford\ Fiësta\ Ruben/' /etc/hostapd/hostapd.conf
-    sed -i 's/^wpa_passphrase=.*/wpa_passphrase=FordFeestRuben/' /etc/hostapd/hostapd.conf
-    sed -i 's/^#ieee80211n/ieee80211n/' /etc/hostapd/hostapd.conf
-    sed -i 's/^#wmm_enabled/wmm_enabled/' /etc/hostapd/hostapd.conf
-    sed -i 's/^#ht_capab/ht_capab/' /etc/hostapd/hostapd.conf
-
-    # set static ip for android phones
-    sed -i '/./,/^$/!d' /etc/dnsmasq.conf
-    sed -i 's/^dhcp-host=.*//' /etc/dnsmasq.conf
-    sed -i 's/^dhcp-host=.*//' /etc/dnsmasq.conf
-    sed -i '/./,/^$/!d' /etc/dnsmasq.conf
-    sh -c "echo 'dhcp-host=c0:ee:fb:e5:9f:d2,10.3.141.10' >> /etc/dnsmasq.conf" # OnePlus 3T Ruben
-    sh -c "echo 'dhcp-host=98:09:CF:68:40:77,10.3.141.11' >> /etc/dnsmasq.conf" # OnePlus 7  Anne
-}
-
 function phone_hotspot_config() {
     # config OnePlus 3T hotspot to get internet on the RPI
     sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
@@ -308,7 +287,6 @@ config_oap
 install_rearcam
 install_services
 activate_services
-install_raspap
 phone_hotspot_config
 activate_ds18b20
 set_permissions
