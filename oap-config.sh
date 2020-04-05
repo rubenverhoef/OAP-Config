@@ -230,19 +230,29 @@ function activate_gps() {
 
 function phone_hotspot_config() {
     # config OnePlus 3T hotspot to get internet on the RPI
-    sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^network=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^[[:space:]]*ssid=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^[[:space:]]*psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^[[:space:]]*#psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^[[:space:]]*key_mgmt=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i 's/^}*//' /etc/wpa_supplicant/wpa_supplicant.conf
-    sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
+
+    if [ -f "/etc/wpa_supplicant/wpa_supplicant.conf" ]; then
+        sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
+        sed -i 's/^network=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+        sed -i 's/^[[:space:]]*ssid=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+        sed -i 's/^[[:space:]]*psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+        sed -i 's/^[[:space:]]*#psk=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+        sed -i 's/^[[:space:]]*key_mgmt=.*//' /etc/wpa_supplicant/wpa_supplicant.conf
+        sed -i 's/^}*//' /etc/wpa_supplicant/wpa_supplicant.conf
+        sed -i '/./,/^$/!d' /etc/wpa_supplicant/wpa_supplicant.conf
+    else
+        sh -c "echo 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev' > /etc/wpa_supplicant/wpa_supplicant.conf"
+        sh -c "echo 'update_config=1' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+        sh -c "echo 'country=NL' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+        sh -c "echo '' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+    fi
+
     sh -c "echo 'network={' >> /etc/wpa_supplicant/wpa_supplicant.conf"
     sh -c "echo '    ssid=\"OnePlus 3T Ruben\"' >> /etc/wpa_supplicant/wpa_supplicant.conf"
     sh -c "echo '    psk=\"1+3TRuben\"' >> /etc/wpa_supplicant/wpa_supplicant.conf" # Not secret
     sh -c "echo '    key_mgmt=WPA-PSK' >> /etc/wpa_supplicant/wpa_supplicant.conf"
     sh -c "echo '}' >> /etc/wpa_supplicant/wpa_supplicant.conf"
+    sh -c "echo '' >> /etc/wpa_supplicant/wpa_supplicant.conf"
 }
 
 function activate_watchdog() {
