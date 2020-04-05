@@ -35,11 +35,11 @@ function set_icons() {
     apt-get install xdotool
     rm -f /home/pi/Desktop/openauto
 
-    install -m 644 /boot/OAP-Config/desktop/openauto.png        "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/desktop/reboot.png          "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/desktop/openauto.png        "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/desktop/reboot.png          "/home/pi/.openauto/icons"
 
-    install -m 644 /boot/OAP-Config/desktop/openauto.desktop    "/home/pi/Desktop"
-    install -m 644 /boot/OAP-Config/desktop/reboot.desktop      "/home/pi/Desktop"
+    install -m 644 /home/pi/OAP-Config/desktop/openauto.desktop    "/home/pi/Desktop"
+    install -m 644 /home/pi/OAP-Config/desktop/reboot.desktop      "/home/pi/Desktop"
 }
 
 # Activate SSH root
@@ -78,7 +78,7 @@ function rpi_init() {
 
 # Set Wallpaper
 function set_wallpaper() {
-    install -m 644 /boot/OAP-Config/desktop/wallpaper.png   "/home/pi"
+    install -m 644 /home/pi/OAP-Config/desktop/wallpaper.png   "/home/pi"
     sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
@@ -90,64 +90,64 @@ function custom_desktop() {
 
 # Set Splash boot screen
 function set_splash() {
-    cp /boot/OAP-Config/desktop/wallpaper.png /usr/share/plymouth/themes/pix/splash.png     
-    install -m 644 /boot/OAP-Config/splash/splash1.h264   "/usr/share/openautopro"
-    install -m 644 /boot/OAP-Config/splash/splash2.h264   "/usr/share/openautopro"
+    cp /home/pi/OAP-Config/desktop/wallpaper.png /usr/share/plymouth/themes/pix/splash.png     
+    install -m 644 /home/pi/OAP-Config/splash/splash1.h264   "/usr/share/openautopro"
+    install -m 644 /home/pi/OAP-Config/splash/splash2.h264   "/usr/share/openautopro"
 }
 
 # Remove unwanted OAP apps
 function config_oap() {
-    install -m 644 /boot/OAP-Config/config/openauto_applications.ini        "/home/pi/.openauto/config"
+    install -m 644 /home/pi/OAP-Config/config/openauto_applications.ini        "/home/pi/.openauto/config"
     install -m 644 /boot/openauto_license.dat                               "/home/pi/.openauto"
-    install -m 644 /boot/OAP-Config/config/openauto_system.ini              "/home/pi/.openauto/config"
-    install -m 644 /boot/OAP-Config/config/openauto_terms_of_service.dat    "/home/pi/.openauto"
+    install -m 644 /home/pi/OAP-Config/config/openauto_system.ini              "/home/pi/.openauto/config"
+    install -m 644 /home/pi/OAP-Config/config/openauto_terms_of_service.dat    "/home/pi/.openauto"
     install_radio_icons
 }
 
 # Copy all the radio icons
 install_radio_icons() {
-    install -m 644 /boot/OAP-Config/DAB/icons/skyradio.png          "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/skyhits.png           "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/qmusic-nonstop.png    "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/qmusic.png            "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/538.png               "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/538top50.png          "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/slam.png              "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/veronica.png          "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/radio10.png           "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/sublime.png           "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/100nl.png             "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/radio1.png            "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/radio2.png            "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/3fm.png               "/home/pi/.openauto/icons"
-    install -m 644 /boot/OAP-Config/DAB/icons/funx.png              "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/skyradio.png          "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/skyhits.png           "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/qmusic-nonstop.png    "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/qmusic.png            "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/538.png               "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/538top50.png          "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/slam.png              "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/veronica.png          "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/radio10.png           "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/sublime.png           "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/100nl.png             "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/radio1.png            "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/radio2.png            "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/3fm.png               "/home/pi/.openauto/icons"
+    install -m 644 /home/pi/OAP-Config/DAB/icons/funx.png              "/home/pi/.openauto/icons"
 }
 
 # Install cam_overlay Rearcam
 function install_rearcam() {
     install -d "/opt/OAP/cam_overlay"
-    install -m 755 /boot/OAP-Config/cam_overlay/cam_overlay.bin                 "/opt/OAP/cam_overlay"
-    install -m 755 /boot/OAP-Config/cam_overlay/overlay.png                     "/opt/OAP/cam_overlay"
-    install -m 755 /boot/OAP-Config/cam_overlay/shader.frag                     "/opt/OAP/cam_overlay"
-    install -m 755 /boot/OAP-Config/cam_overlay/shader.vert                     "/opt/OAP/cam_overlay"
-    install -m 755 /boot/OAP-Config/cam_overlay/shader-YUYV.frag                "/opt/OAP/cam_overlay"
+    install -m 755 /home/pi/OAP-Config/cam_overlay/cam_overlay.bin                 "/opt/OAP/cam_overlay"
+    install -m 755 /home/pi/OAP-Config/cam_overlay/overlay.png                     "/opt/OAP/cam_overlay"
+    install -m 755 /home/pi/OAP-Config/cam_overlay/shader.frag                     "/opt/OAP/cam_overlay"
+    install -m 755 /home/pi/OAP-Config/cam_overlay/shader.vert                     "/opt/OAP/cam_overlay"
+    install -m 755 /home/pi/OAP-Config/cam_overlay/shader-YUYV.frag                "/opt/OAP/cam_overlay"
 }
 
 # Install services
 function install_services() {
     apt install inotify-tools -y
-    install -m 644 /boot/OAP-Config/services/OAP_startup.service                "/etc/systemd/system/"
-    install -m 644 /boot/OAP-Config/services/lightsensor.service                "/etc/systemd/system/"
-    install -m 644 /boot/OAP-Config/services/dabboard.service                   "/etc/systemd/system/"
+    install -m 644 /home/pi/OAP-Config/services/OAP_startup.service                "/etc/systemd/system/"
+    install -m 644 /home/pi/OAP-Config/services/lightsensor.service                "/etc/systemd/system/"
+    install -m 644 /home/pi/OAP-Config/services/dabboard.service                   "/etc/systemd/system/"
 
     install -d "/opt/OAP"
-    install -m 755 /boot/OAP-Config/scripts/obd-keys.py                         "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/service_lightsensor.py              "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/service_OAP_startup.sh              "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/OBD_startup.sh                      "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/scripts/TuneDAB.sh                          "/opt/OAP/"
-    install -m 755 /boot/OAP-Config/desktop/OAP_startup.sh                      "/opt/OAP/"
+    install -m 755 /home/pi/OAP-Config/scripts/obd-keys.py                         "/opt/OAP/"
+    install -m 755 /home/pi/OAP-Config/scripts/service_lightsensor.py              "/opt/OAP/"
+    install -m 755 /home/pi/OAP-Config/scripts/service_OAP_startup.sh              "/opt/OAP/"
+    install -m 755 /home/pi/OAP-Config/scripts/OBD_startup.sh                      "/opt/OAP/"
+    install -m 755 /home/pi/OAP-Config/DAB/radio_cli                               "/opt/OAP/"
+    install -m 755 /home/pi/OAP-Config/scripts/TuneDAB.sh                          "/opt/OAP/"
+    install -m 755 /home/pi/OAP-Config/desktop/OAP_startup.sh                      "/opt/OAP/"
 }
 
 # Activate services
@@ -169,7 +169,7 @@ function update_wiringpi() {
 function install_python_packages() {
     pip3 install astral
     pip3 install PyUserInput
-    cd /boot/OAP-Config/python-OBD && python3 /boot/OAP-Config/python-OBD/setup.py install
+    cd /home/pi/OAP-Config/python-OBD && python3 /home/pi/OAP-Config/python-OBD/setup.py install
 }
 
 # uGreen DABBoard
@@ -266,7 +266,7 @@ set_wallpaper
 set_splash
 set_icons
 config_oap
-install_rearcam
+# install_rearcam
 install_services
 activate_services
 activate_ds18b20
