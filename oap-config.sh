@@ -273,7 +273,7 @@ config_bootloader
 rpi_init
 remove_ssh_message
 custom_desktop
-hide_taskbar
+# hide_taskbar # better to show taskbar to easy access to wifi/bt settings
 install_python_packages
 update_wiringpi
 activate_dab
