@@ -26,12 +26,12 @@ network={
 
 For cloning use:
 
-`sudo git clone https://github.com/rubenverhoef/OAP-Config.git /home/pi/OAP-Config --recurse-submodules`
+`git clone https://github.com/rubenverhoef/OAP-Config.git /home/pi/OAP-Config --recurse-submodules`
 
 ### To update:
 ```
-cd /home/pi/OAP-Config && sudo git reset --hard origin/master
-cd /home/pi/OAP-Config && sudo git pull origin master
+cd /home/pi/OAP-Config && git reset --hard origin/master
+cd /home/pi/OAP-Config && git pull origin master
 ```
 
 # display config.txt:
