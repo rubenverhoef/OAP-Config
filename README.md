@@ -8,8 +8,8 @@ OpenAuto Pro Custom scripts and config
 ## Getting started:
 Flash latest OAP to the SD card.  
 Now edit config.txt to your display settings.  
-Create a file `openauto_license.dat` containing your OAP license key.
-Create a file `wpa_supplicant.conf` with your wifi settings to connect to internet (for instance a phone hotspot).
+Create a file `openauto_license.dat` containing your OAP license key at `/boot/` partition root.  
+Create a file `wpa_supplicant.conf` with your wifi settings to connect to internet (for instance a phone hotspot) at `/boot/` partition root.  
 The `wpa_supplicant.conf` file must contain:
 ```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
