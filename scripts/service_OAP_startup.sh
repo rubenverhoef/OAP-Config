@@ -78,18 +78,19 @@ do
     AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
     AA_VOICE=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
 
+    IGNITION_GPIO=`gpio -g read 13`
+    if [ $IGNITION_GPIO -ne 1 ]; then
+        let "IGNITION_CNT++"
+        if [ $IGNITION_CNT -gt 10 ]; then
+            sudo shutdown -h now
+            exit 0
+        fi
+    else
+        IGNITION_CNT=0
+    fi
+
     if [ -z "$AA_RUNNING" ]; then
         SET_SINK=0
-        IGNITION_GPIO=`gpio -g read 13`
-        if [ $IGNITION_GPIO -ne 1 ]; then
-            let "IGNITION_CNT++"
-            if [ $IGNITION_CNT -gt 10 ]; then
-                sudo shutdown -h now
-                exit 0
-            fi
-        else
-            IGNITION_CNT=0
-        fi
     elif [ $SET_SINK -ne 1 ]; then
         SET_SINK=1
         FIRST_INPUT=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '1p')
