@@ -50,9 +50,9 @@ elif not (now >= sun['sunrise'] and now <= sun['sunset']): # Night
   GPIO.output(daynight_gpio, GPIO.HIGH)
 
 Lux_Array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-if not os.path.exists("/tmp/TSL2561"):
-  os.mkdir("/tmp/TSL2561")
-file = open("/tmp/TSL2561/TSL2561-" + datetime.now().strftime("%d%m%Y-%H%M%S"), "w")
+if not os.path.exists("/home/pi/TSL2561"):
+  os.mkdir("/home/pi/TSL2561")
+file = open("/home/pi/TSL2561/TSL2561-" + datetime.now().strftime("%d%m%Y-%H%M%S"), "w")
 
 i2cBus.write_byte_data(TSL2561_ADDR, 0x80, 0x00)
 
