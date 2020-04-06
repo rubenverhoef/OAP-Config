@@ -28,8 +28,8 @@ LUX_NIGHT=100
 i2cBus = smbus.SMBus(BUS)
 
 # Sun data
-a = Astral()
-sun = a['Amsterdam'].sun(local=True, date=date.today())
+time = Astral()
+sun = time['Amsterdam'].sun(local=True, date=date.today())
 
 # GPIO stuff
 GPIO.setwarnings(False)
@@ -37,8 +37,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(daynight_gpio, GPIO.OUT)
 GPIO.output(daynight_gpio, GPIO.LOW)
 os.system("gpio -g mode " + str(pwm_gpio) + " pwm")
-a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
-b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
+br_a=-(PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR))
+br_b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
 
 now = datetime.now(pytz.utc)
 night = -1
@@ -111,7 +111,7 @@ try:
         total=total+x
       avarage=total/10
 
-      Level=int(round(a*avarage+b,0))
+      Level=int(round(br_a*avarage+br_b,0))
       if Level < 0:
         Level=0
       elif Level > PWM_MAX:
