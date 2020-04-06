@@ -79,30 +79,35 @@ try:
       Infrared = i2cBus.read_word_data(TSL2561_ADDR, 0xAE)
       # print ("Infrared: {}".format(Infrared))
 
-      # Calc factor Infrared/Ambient      
-      if Ambient == 0:
-        Ratio = 0
+      if Infrared < 0xFFFF and Ambient < 0xFFFF: # Check if values are valid (not overflowed)
+        # Calc factor Infrared/Ambient      
+        if Ambient == 0:
+          Ratio = 0
+        else:
+          Ratio = float(Infrared)/float(Ambient)
+
+        # print ("Ratio: {}".format(Ratio))
+
+
+        # Calc lux based on data sheet TSL2561T
+        # T, FN, and CL Package
+        if 0 < Ratio <= 0.50:
+          Lux = 0.0304*float(Ambient) - 0.062*float(Ambient)*(Ratio**1.4)
+        elif 0.50 < Ratio <= 0.61:
+          Lux = 0.0224*float(Ambient) - 0.031*float(Infrared)
+        elif 0.61 < Ratio <= 0.80:
+          Lux = 0.0128*float(Ambient) - 0.0153*float(Infrared)
+        elif 0.80 < Ratio <= 1.3:
+          Lux = 0.00146*float(Ambient) - 0.00112*float(Infrared)
+        else:
+          Lux = 0
+
+        if (Lux > LUX_FULL_BR):
+          Lux = LUX_FULL_BR
       else:
-        Ratio = float(Infrared)/float(Ambient)
-
-      # print ("Ratio: {}".format(Ratio))
-
-      # Calc lux based on data sheet TSL2561T
-      # T, FN, and CL Package
-      if 0 < Ratio <= 0.50:
-        Lux = 0.0304*float(Ambient) - 0.062*float(Ambient)*(Ratio**1.4)
-      elif 0.50 < Ratio <= 0.61:
-        Lux = 0.0224*float(Ambient) - 0.031*float(Infrared)
-      elif 0.61 < Ratio <= 0.80:
-        Lux = 0.0128*float(Ambient) - 0.0153*float(Infrared)
-      elif 0.80 < Ratio <= 1.3:
-        Lux = 0.00146*float(Ambient) - 0.00112*float(Infrared)
-      else:
-        Lux = 0
-      # print("Lux = {} | ".format(Lux))
-
-      if (Lux > LUX_FULL_BR):
         Lux = LUX_FULL_BR
+
+      # print("Lux = {} | ".format(Lux))
 
       Lux_Array.append(Lux)
       Lux_Array.pop(0)
