@@ -33,7 +33,7 @@ else
     rm -f /home/pi/audio_error.sh
 fi
 
-# Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC)
+# Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC, A2DP)
 if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Faded")" ]; then
     echo "Creating Faded sink"
     runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
