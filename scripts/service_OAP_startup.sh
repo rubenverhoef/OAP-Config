@@ -38,6 +38,8 @@ if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Faded")" ]; then
     echo "Creating Faded sink"
     runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
 fi
+# Set faded to 100% volume
+runuser -l pi -c "pactl set-sink-volume Faded 100%"
 # Create virtual sink named Voice for all AA voices
 if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Voice")" ]; then
     echo "Creating Voice sink"
@@ -70,7 +72,7 @@ AUX_STATE=0
 FADE_STATE=0
 SET_SINK=0
 AUX_MOD=0
-OLD_VOLUME=100%
+MUTE_VOLUME=10%
 
 # Main loop for: (checking inputs, )
 for (( ; ; ))
@@ -121,12 +123,11 @@ do
     # Mute faded group when AA is talking, playing music or listening
     if [ -z "$AA_ASSISTANT" ] && [ -z "$AA_VOICE" ] ; then
         if [ $FADE_STATE -ne 0 ]; then
-            runuser -l pi -c "pactl set-sink-volume Faded $OLD_VOLUME"
+            runuser -l pi -c "pactl set-sink-volume Faded 100%"
             FADE_STATE=0
         fi
     elif [ $FADE_STATE -ne 1 ]; then
-        OLD_VOLUME=$(runuser -l pi -c "pactl list sinks" | awk 'BEGIN { ORS=" " } /Name:/ {printf "\r\n%s ", $2;} /Volume:/ {print $5};' | grep "Faded" | awk '{ print $2 }')
-        runuser -l pi -c "pactl set-sink-volume Faded 0%"
+        runuser -l pi -c "pactl set-sink-volume Faded $MUTE_VOLUME"
         FADE_STATE=1
     fi
 done
