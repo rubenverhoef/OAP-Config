@@ -69,11 +69,13 @@ fi
 # Some variables
 IGNITION_CNT=0
 AUX_STATE=0
+MUTE_STATE=0
 FADE_STATE=0
 SET_SINK_AA=0
 SET_SINK_A2DP=0
 AUX_MOD=0
 MUTE_VOLUME=10%
+OLD_VOLUME=100%
 
 # Main loop for: (checking inputs, )
 for (( ; ; ))
@@ -86,6 +88,7 @@ do
     AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
     AA_VOICE=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
     A2DP=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /source:/ {print $3} /channel map:/ {print $3};' | grep "a2dp" | grep "front" | awk '{ print $1 }')
+    CALL=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /source:/ {print $3};' | grep "headset_audio_gateway" | awk '{ print $1 }')
 
     IGNITION_GPIO=`gpio -g read 13`
     if [ $IGNITION_GPIO -ne 1 ]; then
@@ -130,7 +133,7 @@ do
         runuser -l pi -c "pactl unload-module $AUX_MOD"
         DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
     fi
-    # Mute faded group when AA is talking, playing music or listening
+    # Lower volume faded group when AA is talking, playing music or listening
     if [ -z "$AA_ASSISTANT" ] && [ -z "$AA_VOICE" ] ; then
         if [ $FADE_STATE -ne 0 ]; then
             runuser -l pi -c "pactl set-sink-volume Faded 100%"
@@ -139,6 +142,19 @@ do
     elif [ $FADE_STATE -ne 1 ]; then
         runuser -l pi -c "pactl set-sink-volume Faded $MUTE_VOLUME"
         FADE_STATE=1
+    fi
+    # Mute faded when calling
+    if [ -z "$CALL" ] ; then
+        if [ $MUTE_STATE -ne 0 ]; then
+            runuser -l pi -c "pactl set-sink-volume Faded 100%"
+            runuser -l pi -c "pactl set-sink-volume Voice $OLD_VOLUME"
+            MUTE_STATE=0
+        fi
+    elif [ $MUTE_STATE -ne 1 ]; then
+        OLD_VOLUME=$(runuser -l pi -c "pactl list sinks" | awk 'BEGIN { ORS=" " } /Name:/ {printf "\r\n%s ", $2;} /Volume:/ {print $5};' | grep "Voice" | awk '{ print $2 }')
+        runuser -l pi -c "pactl set-sink-volume Faded 0%"
+        runuser -l pi -c "pactl set-sink-volume Voice 0%"
+        MUTE_STATE=1
     fi
 done
 
