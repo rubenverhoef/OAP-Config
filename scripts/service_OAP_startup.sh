@@ -71,6 +71,7 @@ IGNITION_CNT=0
 AUX_STATE=0
 FADE_STATE=0
 SET_SINK_AA=0
+SET_SINK_A2DP=0
 AUX_MOD=0
 MUTE_VOLUME=10%
 
@@ -84,6 +85,7 @@ do
     AA_RUNNING=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | awk '{ print $1 }')
     AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
     AA_VOICE=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
+    A2DP=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /source:/ {print $3} /channel map:/ {print $3};' | grep "a2dp" | grep "front" | awk '{ print $1 }')
 
     IGNITION_GPIO=`gpio -g read 13`
     if [ $IGNITION_GPIO -ne 1 ]; then
@@ -107,6 +109,14 @@ do
         runuser -l pi -c "pacmd move-sink-input $SECOND_INPUT Voice"
         runuser -l pi -c "pacmd move-sink-input $AA_MUSIC Faded"
     fi
+
+    if [ -z "$A2DP" ]; then
+        SET_SINK_A2DP=0
+    elif [ $SET_SINK_A2DP -ne 1 ]; then
+        SET_SINK_A2DP=1
+        runuser -l pi -c "pacmd move-sink-input $A2DP Faded"
+    fi
+
     # AUX redirect trigger
     AUX_GPIO=`gpio -g read 22`
     if [ $AUX_GPIO -ne 1 ] && [ $AUX_STATE -ne 1 ]; then
