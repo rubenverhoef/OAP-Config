@@ -12,6 +12,9 @@ AUX=$(echo $AUX | awk '{ print $1 }')
 # Get DAB input
 DAB=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.platform-soc'")
 DAB=$(echo $DAB | awk '{ print $1 }')
+# Get Mic input
+MIC=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.usb-C-Media_Electronics_Inc.'")
+MIC=$(echo $MIC | awk '{ print $1 }')
 
 # Check all audio variables
 if [ -z "$SINK" ] || [ -z "$AUX" ] || [ -z "$DAB" ]; then
@@ -42,6 +45,8 @@ if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Voice")" ]; then
 fi
 # Make Voice default (so we can change the volume from OAP)
 runuser -l pi -c "pacmd set-default-sink Voice"
+# Make MIC input default
+runuser -l pi -c "pacmd set-default-source $MIC"
 # Redirect Faded to audio output sink
 if [ -z "$(runuser -l pi -c "pacmd list-sink-inputs" | grep "Faded")" ]; then
     echo "Redirecting Faded to Sink"
