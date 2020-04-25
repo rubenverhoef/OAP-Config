@@ -96,7 +96,7 @@ do
     
     # Audio sources
     PACMD_INPUTS=$(runuser -l pi -c "pacmd list-sink-inputs")
-    AA_RUNNING=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | awk '{ print $1 }')
+    AA_RUNNING=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono" | awk '{ print $1 }')
     AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
     AA_VOICE=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
     A2DP=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /channel map:/ {print $3} /media.icon_name =/ {print $3} /media.role =/ {print $3};' | grep "audio-card-bluetooth" | grep "front" | awk '{ print $1 }')
