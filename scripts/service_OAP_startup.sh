@@ -146,8 +146,8 @@ do
         runuser -l pi -c "pactl unload-module $AUX_MOD"
         DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
     fi
-    # Lower volume faded group when AA is talking, playing music or listening
-    if [ -z "$AA_ASSISTANT" ] && [ -z "$AA_VOICE" ] ; then
+    # Lower volume faded group when AA is talking
+    if [ -z "$AA_ASSISTANT" ]; then
         if [ $FADE_STATE -ne 0 ]; then
             runuser -l pi -c "pactl set-sink-volume Faded 100%"
             FADE_STATE=0
@@ -156,8 +156,8 @@ do
         runuser -l pi -c "pactl set-sink-volume Faded $LOWER_VOLUME"
         FADE_STATE=1
     fi
-    # Mute faded when calling
-    if [ -z "$CALL" ] ; then
+    # Mute faded when calling, or AA is listening
+    if [ -z "$CALL" ] && [ -z "$AA_VOICE" ]; then
         if [ $MUTE_STATE -ne 0 ]; then
             runuser -l pi -c "pactl set-sink-volume Faded 100%"
             runuser -l pi -c "pactl set-sink-volume Voice $OLD_VOLUME"
