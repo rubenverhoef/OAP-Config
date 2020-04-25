@@ -117,6 +117,7 @@ do
         SET_SINK_AA=0
     elif [ $SET_SINK_AA -ne 1 ]; then
         SET_SINK_AA=1
+        PACMD_INPUTS=$(runuser -l pi -c "pacmd list-sink-inputs")
         FIRST_INPUT=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '1p')
         SECOND_INPUT=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '2p')
         AA_MUSIC=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "front"  | awk '{ print $1 }')
