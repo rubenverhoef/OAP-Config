@@ -37,11 +37,11 @@ function set_icons() {
     apt-get install xdotool
     rm -f /home/pi/Desktop/openauto
 
-    install -m 644 "$DIR"/desktop/openauto.png        "/home/pi/.openauto/icons"
-    install -m 644 "$DIR"/desktop/reboot.png          "/home/pi/.openauto/icons"
+    install -m 644 "$DIR"/config/desktop/openauto.png        "/home/pi/.openauto/icons"
+    install -m 644 "$DIR"/config/desktop/reboot.png          "/home/pi/.openauto/icons"
 
-    install -m 644 "$DIR"/desktop/openauto.desktop    "/home/pi/Desktop"
-    install -m 644 "$DIR"/desktop/reboot.desktop      "/home/pi/Desktop"
+    install -m 644 "$DIR"/config/desktop/openauto.desktop    "/home/pi/Desktop"
+    install -m 644 "$DIR"/config/desktop/reboot.desktop      "/home/pi/Desktop"
 }
 
 # Activate SSH root
@@ -80,7 +80,7 @@ function rpi_init() {
 
 # Set Wallpaper
 function set_wallpaper() {
-    install -m 644 "$DIR"/desktop/wallpaper.png   "/home/pi"
+    install -m 644 "$DIR"/config/desktop/wallpaper.png   "/home/pi"
     sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
@@ -92,17 +92,17 @@ function custom_desktop() {
 
 # Set Splash boot screen
 function set_splash() {
-    cp "$DIR"/desktop/wallpaper.png /usr/share/plymouth/themes/pix/splash.png     
-    install -m 644 "$DIR"/splash/splash1.h264   "/usr/share/openautopro"
-    install -m 644 "$DIR"/splash/splash2.h264   "/usr/share/openautopro"
+    cp "$DIR"/config/desktop/wallpaper.png /usr/share/plymouth/themes/pix/splash.png     
+    install -m 644 "$DIR"/config/splash/splash1.h264   "/usr/share/openautopro"
+    install -m 644 "$DIR"/config/splash/splash2.h264   "/usr/share/openautopro"
 }
 
 # Remove unwanted OAP apps
 function config_oap() {
-    install -m 644 "$DIR"/config/openauto_applications.ini        "/home/pi/.openauto/config"
+    install -m 644 "$DIR"/config/openauto/openauto_applications.ini        "/home/pi/.openauto/config"
     install -m 644 /boot/openauto_license.dat                     "/home/pi/.openauto"
-    install -m 644 "$DIR"/config/openauto_system.ini              "/home/pi/.openauto/config"
-    install -m 644 "$DIR"/config/openauto_terms_of_service.dat    "/home/pi/.openauto"
+    install -m 644 "$DIR"/config/openauto/openauto_system.ini              "/home/pi/.openauto/config"
+    install -m 644 "$DIR"/config/openauto/openauto_terms_of_service.dat    "/home/pi/.openauto"
     install_radio_icons
 }
 
@@ -149,7 +149,7 @@ function install_services() {
     install -m 755 "$DIR"/scripts/OBD_startup.sh                      "/opt/OAP/"
     install -m 755 "$DIR"/DAB/radio_cli                               "/opt/OAP/"
     install -m 755 "$DIR"/scripts/TuneDAB.sh                          "/opt/OAP/"
-    install -m 755 "$DIR"/desktop/OAP_startup.sh                      "/opt/OAP/"
+    install -m 755 "$DIR"/config/desktop/OAP_startup.sh                      "/opt/OAP/"
 }
 
 # Activate services
