@@ -4,8 +4,8 @@
 PULSEAUDIO=$(runuser -l pi -c "pulseaudio --check")
 while [ ! -z "$PULSEAUDIO" ]
 do
-    # # Feed the dog
-    # sudo touch /dev/watchdog
+    # Feed the dog
+    sudo touch /dev/watchdog
     echo "Sleep"
     sleep 5
     PULSEAUDIO=$(runuser -l pi -c "pulseaudio --check")
