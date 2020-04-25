@@ -46,9 +46,6 @@ if [ -z "$(echo "$PACTL_SINKS" | grep "Faded")" ]; then
     echo "Creating Faded sink"
     runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
 fi
-# Set faded and output to 100% volume
-runuser -l pi -c "pactl set-sink-volume Faded 100%"
-runuser -l pi -c "pactl set-sink-volume $SINK 100%"
 # Create virtual sink named Voice for all AA voices
 if [ -z "$(echo "$PACTL_SINKS" | grep "Voice")" ]; then
     echo "Creating Voice sink"
@@ -74,6 +71,11 @@ if [ -z "$DAB_MOD" ]; then
     echo "Redirecting DAB to Sink"
     DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 fi
+
+# Set all volumes to 100% volume
+runuser -l pi -c "pactl set-sink-volume Faded 100%"
+runuser -l pi -c "pactl set-sink-volume Voice 100%"
+runuser -l pi -c "pactl set-sink-volume $SINK 100%"
 
 # Some variables
 IGNITION_CNT=0
