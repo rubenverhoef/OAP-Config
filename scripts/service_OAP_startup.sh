@@ -146,8 +146,9 @@ do
         runuser -l pi -c "pactl unload-module $AUX_MOD"
         DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
     fi
-    # Lower volume faded group when AA is talking
-    if [ -z "$AA_ASSISTANT" ]; then
+    # Lower volume faded group when AA is talking or in reverse gear
+    REVERSE_GEAR=`gpio -g read 17`
+    if [ -z "$AA_ASSISTANT" ] && [ $REVERSE_GEAR -ne 1 ]; then
         if [ $FADE_STATE -ne 0 ]; then
             runuser -l pi -c "pactl set-sink-volume Faded 100%"
             FADE_STATE=0
