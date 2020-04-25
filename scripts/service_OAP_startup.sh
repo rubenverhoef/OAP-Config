@@ -72,7 +72,7 @@ if [ -z "$DAB_MOD" ]; then
     DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
 fi
 
-# Set all volumes to 100% volume
+# Set faded and output to 100% volume
 runuser -l pi -c "pactl set-sink-volume Faded 100%"
 runuser -l pi -c "pactl set-sink-volume Voice 100%"
 runuser -l pi -c "pactl set-sink-volume $SINK 100%"
