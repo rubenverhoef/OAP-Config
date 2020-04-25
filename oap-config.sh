@@ -84,6 +84,11 @@ function set_wallpaper() {
     sed -i "s/wallpaper=.*/wallpaper=\/home\/pi\/wallpaper.png/g" /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 }
 
+# Copy ringtone
+function copy_ringtone() {
+    install -m 644 "$DIR"/config/ringtone.wav   "/home/pi"
+}
+
 # Set custom desktop settings
 function custom_desktop() {
     install -d "/home/pi/.config/lxsession/LXDE-pi"
@@ -265,6 +270,7 @@ activate_rtc
 activate_gps
 activate_watchdog
 set_wallpaper
+copy_ringtone
 set_splash
 set_icons
 config_oap
