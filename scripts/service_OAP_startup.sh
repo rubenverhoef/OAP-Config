@@ -12,17 +12,17 @@ do
 done
 
 # Get audio output
-SINK=$(runuser -l pi -c "pactl list short sources | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo'")
-SINK=$(echo $SINK | awk '{ print $1 }')
+PACTL_SOURCES=$(runuser -l pi -c "pactl list short sources")
+PACTL_SINKS=$(runuser -l pi -c "pactl list sinks short")
+PACMD_INPUTS=$(runuser -l pi -c "pacmd list-sink-inputs")
+
+SINK=$(echo "$PACTL_SOURCES" | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo' | awk '{ print $1 }')
 # Get AUX input
-AUX=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.usb-Burr-Brown'")
-AUX=$(echo $AUX | awk '{ print $1 }')
+AUX=$(echo "$PACTL_SOURCES" | grep 'alsa_input.usb-Burr-Brown' | awk '{ print $1 }')
 # Get DAB input
-DAB=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.platform-soc'")
-DAB=$(echo $DAB | awk '{ print $1 }')
+DAB=$(echo "$PACTL_SOURCES" | grep 'alsa_input.platform-soc' | awk '{ print $1 }')
 # Get Mic input
-MIC=$(runuser -l pi -c "pactl list short sources | grep 'alsa_input.usb-C-Media_Electronics_Inc.'")
-MIC=$(echo $MIC | awk '{ print $1 }')
+MIC=$(echo "$PACTL_SOURCES" | grep 'alsa_input.usb-C-Media_Electronics_Inc.' | awk '{ print $1 }')
 
 # Check all audio variables
 if [ -z "$SINK" ] || [ -z "$AUX" ] || [ -z "$DAB" ]; then
@@ -42,14 +42,15 @@ else
 fi
 
 # Create virtual sink named Faded for all music audio (DAB, AUX, AA_MUSIC, A2DP)
-if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Faded")" ]; then
+if [ -z "$(echo "$PACTL_SINKS" | grep "Faded")" ]; then
     echo "Creating Faded sink"
     runuser -l pi -c "pactl load-module module-null-sink sink_name=Faded sink_properties=device.description='Faded_Sink'"
 fi
-# Set faded to 100% volume
+# Set faded and output to 100% volume
 runuser -l pi -c "pactl set-sink-volume Faded 100%"
+runuser -l pi -c "pactl set-sink-volume $SINK 100%"
 # Create virtual sink named Voice for all AA voices
-if [ -z "$(runuser -l pi -c "pactl list sinks short" | grep "Voice")" ]; then
+if [ -z "$(echo "$PACTL_SINKS" | grep "Voice")" ]; then
     echo "Creating Voice sink"
     runuser -l pi -c "pactl load-module module-null-sink sink_name=Voice sink_properties=device.description='Voice_Sink'"
 fi
@@ -58,17 +59,17 @@ runuser -l pi -c "pacmd set-default-sink Voice"
 # Make MIC input default
 runuser -l pi -c "pacmd set-default-source $MIC"
 # Redirect Faded to audio output sink
-if [ -z "$(runuser -l pi -c "pacmd list-sink-inputs" | grep "Faded")" ]; then
+if [ -z "$(echo "$PACMD_INPUTS" | grep "Faded")" ]; then
     echo "Redirecting Faded to Sink"
     runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
 fi
 # Redirect Voice to audio output sink
-if [ -z "$(runuser -l pi -c "pacmd list-sink-inputs" | grep "Voice")" ]; then
+if [ -z "$(echo "$PACMD_INPUTS" | grep "Voice")" ]; then
     echo "Redirecting Voice to Sink"
     runuser -l pi -c "pactl load-module module-loopback source=Voice.monitor sink=$SINK"
 fi
 # Redirect DAB audio to faded output
-DAB_MOD=$(runuser -l pi -c "pacmd list-sink-inputs" | grep "alsa_input.platform-soc")
+DAB_MOD=$(echo "$PACMD_INPUTS" | grep "alsa_input.platform-soc")
 if [ -z "$DAB_MOD" ]; then
     echo "Redirecting DAB to Sink"
     DAB_MOD=$(runuser -l pi -c "pactl load-module module-loopback source=$DAB sink=Faded")
@@ -92,11 +93,12 @@ do
     sudo touch /dev/watchdog
     
     # Audio sources
-    AA_RUNNING=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | awk '{ print $1 }')
+    PACMD_INPUTS=$(runuser -l pi -c "pacmd list-sink-inputs")
+    AA_RUNNING=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | awk '{ print $1 }')
     AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
-    AA_VOICE=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
-    A2DP=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /channel map:/ {print $3} /media.icon_name =/ {print $3} /media.role =/ {print $3};' | grep "audio-card-bluetooth" | grep "front" | awk '{ print $1 }')
-    CALL=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /sink:/ {print $3};' | grep "headset_audio_gateway" | awk '{ print $1 }')
+    AA_VOICE=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
+    A2DP=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /channel map:/ {print $3} /media.icon_name =/ {print $3} /media.role =/ {print $3};' | grep "audio-card-bluetooth" | grep "front" | awk '{ print $1 }')
+    CALL=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /sink:/ {print $3};' | grep "headset_audio_gateway" | awk '{ print $1 }')
 
     IGNITION_GPIO=`gpio -g read 13`
     if [ $IGNITION_GPIO -ne 1 ]; then
@@ -113,9 +115,9 @@ do
         SET_SINK_AA=0
     elif [ $SET_SINK_AA -ne 1 ]; then
         SET_SINK_AA=1
-        FIRST_INPUT=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '1p')
-        SECOND_INPUT=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '2p')
-        AA_MUSIC=$(runuser -l pi -c "pacmd list-sink-inputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "front"  | awk '{ print $1 }')
+        FIRST_INPUT=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '1p')
+        SECOND_INPUT=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono"  | awk '{ print $1 }' | sed -n '2p')
+        AA_MUSIC=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "front"  | awk '{ print $1 }')
         runuser -l pi -c "pacmd move-sink-input $FIRST_INPUT Voice"
         runuser -l pi -c "pacmd move-sink-input $SECOND_INPUT Voice"
         runuser -l pi -c "pacmd move-sink-input $AA_MUSIC Faded"
