@@ -98,7 +98,7 @@ do
     AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
     AA_VOICE=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
     A2DP=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /channel map:/ {print $3} /media.icon_name =/ {print $3} /media.role =/ {print $3};' | grep "audio-card-bluetooth" | grep "front" | awk '{ print $1 }')
-    CALL=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /sink:/ {print $3};' | grep "headset_audio_gateway" | awk '{ print $1 }')
+    CALL=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /sink:/ {print $3};' | grep "headset_audio_gateway" | grep "RUNNING" | awk '{ print $1 }')
 
     IGNITION_GPIO=`gpio -g read 13`
     if [ $IGNITION_GPIO -ne 1 ]; then
