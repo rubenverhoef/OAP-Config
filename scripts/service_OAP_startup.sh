@@ -85,8 +85,8 @@ FADE_STATE=0
 SET_SINK_AA=0
 SET_SINK_A2DP=0
 AUX_MOD=0
-MUTE_VOLUME=10%
-OLD_VOLUME=100%
+LOWER_VOLUME="30%"
+OLD_VOLUME="100%"
 
 # Main loop for: (checking inputs, )
 for (( ; ; ))
@@ -153,7 +153,7 @@ do
             FADE_STATE=0
         fi
     elif [ $FADE_STATE -ne 1 ]; then
-        runuser -l pi -c "pactl set-sink-volume Faded $MUTE_VOLUME"
+        runuser -l pi -c "pactl set-sink-volume Faded $LOWER_VOLUME"
         FADE_STATE=1
     fi
     # Mute faded when calling
