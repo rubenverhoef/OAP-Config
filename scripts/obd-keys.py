@@ -58,12 +58,14 @@ class OBDStruct:
     def revCamOn(self):
         GPIO.output(reverseGPIO, GPIO.HIGH)
         keyboard.tap_key(keyboard.function_keys[6])
+        time.sleep(0.1)
         os.chdir("/opt/OAP/cam_overlay/")
         subprocess.Popen(["./cam_overlay.bin", "-s", "-d", "/dev/v4l/by-id/usb-fushicai_usbtv007_300000000002-video-index0"])
 
     def revCamOff(self):
         GPIO.output(reverseGPIO, GPIO.LOW)
         keyboard.tap_key(keyboard.function_keys[6])
+        time.sleep(0.1)
         subprocess.Popen(["killall", "cam_overlay.bin"])
 
 revCMD      = b"223B54"
