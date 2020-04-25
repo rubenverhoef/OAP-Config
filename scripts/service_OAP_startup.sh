@@ -1,7 +1,15 @@
 #!/bin/bash
 
-# Feed the dog
-sudo touch /dev/watchdog
+# Wait for pulseaudio
+PULSEAUDIO=$(runuser -l pi -c "pulseaudio --check")
+while [ ! -z "$PULSEAUDIO" ]
+do
+    # # Feed the dog
+    # sudo touch /dev/watchdog
+    echo "Sleep"
+    sleep 5
+    PULSEAUDIO=$(runuser -l pi -c "pulseaudio --check")
+done
 
 # Get audio output
 SINK=$(runuser -l pi -c "pactl list short sources | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo'")
