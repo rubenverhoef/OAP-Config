@@ -10,6 +10,7 @@ do
     sleep 5
     PULSEAUDIO=$(runuser -l pi -c "pulseaudio --check")
 done
+sleep 5
 
 # Get audio output
 PACTL_SOURCES=$(runuser -l pi -c "pactl list short sources")
