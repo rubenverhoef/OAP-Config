@@ -33,11 +33,3 @@ For cloning use:
 cd /home/pi/OAP-Config && git reset --hard origin/master
 cd /home/pi/OAP-Config && git pull origin master
 ```
-
-# display config.txt:
-````
-hdmi_group=2
-hdmi_mode=87
-hdmi_cvt 1024 600 60 6 0 0 0
-hdmi_drive=1
-````
