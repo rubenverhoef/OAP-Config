@@ -20,9 +20,9 @@ SINK=$(echo "$PACTL_SOURCES" | grep 'alsa_output.usb-Burr-Brown' | grep --invert
 # Get AUX input
 AUX=$(echo "$PACTL_SOURCES" | grep 'alsa_input.usb-Burr-Brown' | awk '{ print $1 }')
 # Get DAB input
-DAB=$(echo "$PACTL_SOURCES" | grep 'alsa_input.platform-soc' | awk '{ print $1 }')
+DAB=$(echo "$PACTL_SOURCES" | grep 'alsa_input.platform-soc_sound' | awk '{ print $1 }')
 # Get Mic input
-MIC=$(echo "$PACTL_SOURCES" | grep 'alsa_input.usb-C-Media_Electronics_Inc.' | awk '{ print $1 }')
+MIC=$(echo "$PACTL_SOURCES" | grep 'alsa_input.usb-045e_USB_camera-01' | awk '{ print $1 }')
 
 # Check all audio variables
 if [ -z "$SINK" ] || [ -z "$AUX" ] || [ -z "$DAB" ]; then
