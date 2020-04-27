@@ -6,8 +6,8 @@ import RPi.GPIO as GPIO
 import subprocess
 from time import sleep
 import pytz
-import astral
-from astral import *
+from astral import LocationInfo
+from astral.sun import sun
 from datetime import *
 
 # ---------------------------------
@@ -28,8 +28,8 @@ LUX_NIGHT=100
 i2cBus = smbus.SMBus(BUS)
 
 # Sun data
-time = Astral()
-sun = time['Amsterdam'].sun(local=True, date=date.today())
+city = LocationInfo("Amsterdam", "The Netherlands", "Europe/Amstredam", 52.37, 4.9)
+sunObj = sun(city.observer, date=date.today())
 
 # GPIO stuff
 GPIO.setwarnings(False)
@@ -42,10 +42,10 @@ br_b=(PWM_MAX+((PWM_MAX/(LUX_FULL_BR-LUX_DARK_BR)))*LUX_DARK_BR)
 
 now = datetime.now(pytz.utc)
 night = -1
-if now >= sun['sunrise'] and now <= sun['sunset']: # Day
+if now >= sunObj['sunrise'] and now <= sunObj['sunset']: # Day
   night = False
   GPIO.output(daynight_gpio, GPIO.LOW)
-elif not (now >= sun['sunrise'] and now <= sun['sunset']): # Night
+elif not (now >= sunObj['sunrise'] and now <= sunObj['sunset']): # Night
   night = True
   GPIO.output(daynight_gpio, GPIO.HIGH)
 
@@ -126,12 +126,12 @@ try:
 
       if avarage > LUX_DAY and night != False: # Day mode
         now = datetime.now(pytz.utc)
-        if now >= sun['sunrise'] and now <= sun['sunset']:
+        if now >= sunObj['sunrise'] and now <= sunObj['sunset']:
           night = False
           GPIO.output(daynight_gpio, GPIO.LOW)
       elif avarage < LUX_NIGHT and night != True: # Night mode
         now = datetime.now(pytz.utc)
-        if not (now >= sun['sunrise'] and now <= sun['sunset']):
+        if not (now >= sunObj['sunrise'] and now <= sunObj['sunset']):
           night = True
           GPIO.output(daynight_gpio, GPIO.HIGH)
 
