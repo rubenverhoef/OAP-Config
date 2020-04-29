@@ -13,11 +13,11 @@ done
 sleep 5
 
 # Get audio output
-PACTL_SOURCES=$(runuser -l pi -c "pactl list short sources")
+PACTL_SOURCES=$(runuser -l pi -c "pactl list sources short")
 PACTL_SINKS=$(runuser -l pi -c "pactl list sinks short")
 PACMD_INPUTS=$(runuser -l pi -c "pacmd list-sink-inputs")
 
-SINK=$(echo "$PACTL_SOURCES" | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo' | awk '{ print $1 }')
+SINK=$(echo "$PACTL_SINKS" | grep 'alsa_output.usb-Burr-Brown' | grep --invert-match 'echo' | awk '{ print $1 }')
 # Get AUX input
 AUX=$(echo "$PACTL_SOURCES" | grep 'alsa_input.usb-Burr-Brown' | awk '{ print $1 }')
 # Get DAB input
