@@ -57,12 +57,12 @@ runuser -l pi -c "pacmd set-default-sink Voice"
 # Make MIC input default
 runuser -l pi -c "pacmd set-default-source $MIC"
 # Redirect Faded to audio output sink
-if [ -z "$(echo "$PACMD_INPUTS" | grep "Faded")" ]; then
+if [ -z "$(echo "$PACTL_SINKS" | grep "Faded")" ]; then
     echo "Redirecting Faded to Sink"
     runuser -l pi -c "pactl load-module module-loopback source=Faded.monitor sink=$SINK"
 fi
 # Redirect Voice to audio output sink
-if [ -z "$(echo "$PACMD_INPUTS" | grep "Voice")" ]; then
+if [ -z "$(echo "$PACTL_SINKS" | grep "Voice")" ]; then
     echo "Redirecting Voice to Sink"
     runuser -l pi -c "pactl load-module module-loopback source=Voice.monitor sink=$SINK"
 fi
