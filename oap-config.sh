@@ -274,7 +274,7 @@ copy_ringtone
 set_splash
 set_icons
 config_oap
-# install_rearcam
+install_rearcam
 install_services
 activate_services
 activate_ds18b20
