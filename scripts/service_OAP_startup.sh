@@ -98,7 +98,7 @@ do
     # Audio sources
     PACMD_INPUTS=$(runuser -l pi -c "pacmd list-sink-inputs")
     AA_RUNNING=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "mono" | awk '{ print $1 }')
-    AA_ASSISTANT=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "/r/n%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
+    AA_MIC=$(runuser -l pi -c "pacmd list-source-outputs" | awk 'BEGIN { ORS=" " } /index:/ {printf "%s ", $2;} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "mono" | grep "autoapp" | awk '{ print $1 }')
     AA_VOICE=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /channel map:/ {print $3} /application.process.binary =/ {print $3};' | grep "autoapp" | grep "RUNNING" | grep "mono"  | awk '{ print $1 }')
     A2DP=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /channel map:/ {print $3} /media.icon_name =/ {print $3} /media.role =/ {print $3};' | grep "audio-card-bluetooth" | grep "front" | awk '{ print $1 }')
     CALL=$(echo "$PACMD_INPUTS" | awk 'BEGIN { ORS=" " } /index:/ {printf "\r\n%s ", $2;} /state:/ {print $2} /sink:/ {print $3};' | grep "headset_audio_gateway" | grep "RUNNING" | awk '{ print $1 }')
@@ -159,7 +159,7 @@ do
         FADE_STATE=1
     fi
     # Mute faded when calling, or AA is listening
-    if [ -z "$CALL" ] && [ -z "$AA_ASSISTANT" ]; then
+    if [ -z "$CALL" ] && [ -z "$AA_MIC" ]; then
         if [ $MUTE_STATE -ne 0 ]; then
             runuser -l pi -c "pactl set-sink-volume Faded 100%"
             runuser -l pi -c "pactl set-sink-volume Voice $OLD_VOLUME"
