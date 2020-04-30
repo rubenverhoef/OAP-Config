@@ -86,7 +86,7 @@ FADE_STATE=0
 SET_SINK_AA=0
 SET_SINK_A2DP=0
 AUX_MOD=0
-LOWER_VOLUME="50%"
+LOWER_VOLUME="60%"
 OLD_VOLUME="100%"
 
 # Main loop for: (checking inputs, )
