@@ -53,7 +53,7 @@ if [ -z "$(echo "$PACTL_SINKS" | grep "Voice")" ]; then
     runuser -l pi -c "pactl load-module module-null-sink sink_name=Voice sink_properties=device.description='Voice_Sink'"
 fi
 # Make Voice default (so we can change the volume from OAP)
-runuser -l pi -c "pacmd set-default-sink Voice"
+runuser -l pi -c "pacmd set-default-sink $SINK"
 # Make MIC input default
 runuser -l pi -c "pacmd set-default-source $MIC"
 # Redirect Faded to audio output sink
