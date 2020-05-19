@@ -80,6 +80,7 @@ runuser -l pi -c "pactl set-sink-volume $SINK 100%"
 
 # Some variables
 IGNITION_CNT=0
+WAIT_FOR_OAP=0
 AUX_STATE=0
 MUTE_STATE=0
 FADE_STATE=0
@@ -94,6 +95,25 @@ for (( ; ; ))
 do
     # Feed the dog
     sudo touch /dev/watchdog
+
+    # watchdog for OAP running
+    OAP_RUNNING=$(ps aux | grep "/usr/local/bin/autoapp" | grep --invert-match "grep")
+    while [ -z "$OAP_RUNNING" ] && [ $WAIT_FOR_OAP -lt 10 ]
+    do
+        if [ $WAIT_FOR_OAP -eq 0 ]; then
+            systemctl restart display-manager
+        fi
+
+        # Feed the dog
+        sudo touch /dev/watchdog
+
+        echo "Wait for openauto to start"
+        sleep 5 # wait for openauto to start
+
+        OAP_RUNNING=$(ps aux | grep "/usr/local/bin/autoapp" | grep --invert-match "grep")
+        let "WAIT_FOR_OAP++"
+    done
+    WAIT_FOR_OAP=0
     
     # Audio sources
     PACMD_INPUTS=$(runuser -l pi -c "pacmd list-sink-inputs")
