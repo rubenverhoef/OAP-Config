@@ -268,7 +268,7 @@ update_wiringpi
 activate_dab
 activate_rtc
 activate_gps
-activate_watchdog
+# activate_watchdog
 set_wallpaper
 copy_ringtone
 set_splash

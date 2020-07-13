@@ -4,8 +4,6 @@
 PULSEAUDIO=$(runuser -l pi -c "pulseaudio --check")
 while [ ! -z "$PULSEAUDIO" ]
 do
-    # Feed the dog
-    sudo touch /dev/watchdog
     echo "Sleep"
     sleep 5
     PULSEAUDIO=$(runuser -l pi -c "pulseaudio --check")
@@ -93,9 +91,6 @@ OLD_VOLUME="100%"
 # Main loop for: (checking inputs, )
 for (( ; ; ))
 do
-    # Feed the dog
-    sudo touch /dev/watchdog
-
     # watchdog for OAP running
     OAP_RUNNING=$(ps aux | grep "/usr/local/bin/autoapp" | grep --invert-match "grep")
     while [ -z "$OAP_RUNNING" ] && [ $WAIT_FOR_OAP -lt 10 ]
@@ -103,9 +98,6 @@ do
         if [ $WAIT_FOR_OAP -eq 0 ]; then
             systemctl restart display-manager
         fi
-
-        # Feed the dog
-        sudo touch /dev/watchdog
 
         echo "Wait for openauto to start"
         sleep 5 # wait for openauto to start
