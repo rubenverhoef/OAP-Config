@@ -19,7 +19,7 @@ function update_system() {
 function config_bootloader() {
     # see https://github.com/raspberrypi/rpi-eeprom/tree/master/firmware/critical for latest
     apt install rpi-eeprom -y
-    cp /lib/firmware/raspberrypi/bootloader/critical/pieeprom-2019-09-10.bin /home/pi/pieeprom.bin
+    cp /lib/firmware/raspberrypi/bootloader/critical/pieeprom-2020-04-16.bin /home/pi/pieeprom.bin
     rpi-eeprom-config /home/pi/pieeprom.bin > /home/pi/bootconf.txt
     
     sed -i 's/^WAKE_ON_GPIO=1/WAKE_ON_GPIO=0/' /home/pi/bootconf.txt
