@@ -86,7 +86,8 @@ function set_wallpaper() {
 
 # Copy ringtone
 function copy_ringtone() {
-    install -m 644 "$DIR"/config/ringtone.wav   "/home/pi"
+    install -m 644 "$DIR"/config/ringtone.wav       "/home/pi"
+    install -m 644 "$DIR"/config/notification.wav   "/home/pi"
 }
 
 # Set custom desktop settings
