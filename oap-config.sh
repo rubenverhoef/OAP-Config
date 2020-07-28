@@ -105,10 +105,10 @@ function set_splash() {
 
 # Remove unwanted OAP apps
 function config_oap() {
-    install -m 644 "$DIR"/config/openauto/openauto_applications.ini        "/home/pi/.openauto/config"
-    install -m 644 /boot/openauto_license.dat                     "/home/pi/.openauto"
-    install -m 644 "$DIR"/config/openauto/openauto_system.ini              "/home/pi/.openauto/config"
-    install -m 644 "$DIR"/config/openauto/openauto_terms_of_service.dat    "/home/pi/.openauto"
+    install -m 644 "$DIR"/config/openauto/openauto_applications.ini     "/home/pi/.openauto/config"
+    install -m 644 /boot/openauto_license.dat                           "/home/pi/.openauto"
+    install -m 644 "$DIR"/config/openauto/openauto_system.ini           "/home/pi/.openauto/config"
+    install -m 644 "$DIR"/config/openauto/openauto_terms_of_service.dat "/home/pi/.openauto"
     install_radio_icons
 }
 
@@ -155,7 +155,7 @@ function install_services() {
     install -m 755 "$DIR"/scripts/OBD_startup.sh                      "/opt/OAP/"
     install -m 755 "$DIR"/DAB/radio_cli                               "/opt/OAP/"
     install -m 755 "$DIR"/scripts/TuneDAB.sh                          "/opt/OAP/"
-    install -m 755 "$DIR"/config/desktop/OAP_startup.sh                      "/opt/OAP/"
+    install -m 755 "$DIR"/config/desktop/OAP_startup.sh               "/opt/OAP/"
 }
 
 # Activate services
