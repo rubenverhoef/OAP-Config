@@ -1,0 +1,14 @@
+[Unit]
+ Description=BT connect service
+ After=bluetooth.target
+
+[Service]
+ Type=simple
+ ExecStart=/opt/OAP/service_BT_Connect.sh
+ Restart=on-failure
+ StartLimitInterval=60
+ RestartSec=5
+ StartLimitBurst=3
+ 
+[Install]
+ WantedBy=multi-user.target

@@ -145,6 +145,7 @@ function install_rearcam() {
 function install_services() {
     apt install inotify-tools -y
     install -m 644 "$DIR"/services/OAP_startup.service                "/etc/systemd/system/"
+    install -m 644 "$DIR"/services/BT_Connect.service                 "/etc/systemd/system/"
     install -m 644 "$DIR"/services/lightsensor.service                "/etc/systemd/system/"
     install -m 644 "$DIR"/services/dabboard.service                   "/etc/systemd/system/"
 
@@ -153,6 +154,7 @@ function install_services() {
     install -m 755 "$DIR"/scripts/service_lightsensor.py              "/opt/OAP/"
     install -m 755 "$DIR"/scripts/service_OAP_startup.sh              "/opt/OAP/"
     install -m 755 "$DIR"/scripts/OBD_startup.sh                      "/opt/OAP/"
+    install -m 755 "$DIR"/scripts/service_BT_Connect.sh               "/opt/OAP/"
     install -m 755 "$DIR"/DAB/radio_cli                               "/opt/OAP/"
     install -m 755 "$DIR"/scripts/TuneDAB.sh                          "/opt/OAP/"
     install -m 755 "$DIR"/config/desktop/OAP_startup.sh               "/opt/OAP/"
@@ -161,6 +163,7 @@ function install_services() {
 # Activate services
 function activate_services() {
     systemctl enable OAP_startup.service
+    systemctl enable BT_Connect.service
     systemctl enable lightsensor.service
     systemctl enable dabboard.service
     sed -i '/@bash \/opt\/OAP\/OBD_startup.sh/d' /home/pi/.config/lxsession/LXDE-pi/autostart
