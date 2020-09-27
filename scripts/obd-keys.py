@@ -21,13 +21,16 @@ GPIO.output(reverseGPIO, GPIO.LOW)
 keyboard = PyKeyboard()
 
 class OBDStruct:
-    def __init__(self, bitSelect, isPressing, button):
+    def __init__(self, bitSelect, isPressing, button, secondbutton=""):
         self.bitSelect  = bitSelect
         self.isPressing = isPressing
         self.button     = button
+        self.secondbutton = secondbutton
 
     def pressButton(self):
         keyboard.press_key(self.button)
+        if secondbutton:
+            keyboard.tap_key(self.secondbutton)
 
     def releaseButton(self):
         keyboard.release_key(self.button)
@@ -185,7 +188,7 @@ key9       = OBDStruct((0x62805100000008 ^ keyBase), False, "9")           # Rad
 keyStar    = OBDStruct((0x62805100000010 ^ keyBase), False, keyboard.down_key)  # Menu Down
 keyHash    = OBDStruct((0x62805100000020 ^ keyBase), False, keyboard.up_key)    # Menu Up
 keyInfo    = OBDStruct((0x62805140000000 ^ keyBase), False, keyboard.left_key)  # Hamburger Menu
-# keyReject  = OBDStruct((0x62805100040000 ^ keyBase), False, "left arrow")  # Hamburger Menu
+keyReject  = OBDStruct((0x62805100040000 ^ keyBase), False, keyboard.control_key, keyboard.function_keys[3])  # Switch between OAP and AA
 keyNext    = OBDStruct((0x62805100080000 ^ keyBase), False, "n")           # Next
 keyPrev    = OBDStruct((0x62805100020000 ^ keyBase), False, "v")           # Previous
 keyOK      = OBDStruct((0x62805100200000 ^ keyBase), False, keyboard.enter_key)      # Enter
